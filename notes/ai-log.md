@@ -57,3 +57,19 @@ Running log of AI-assisted work on this project, one entry per phase. See CLAUDE
 
 **My notes:**
 
+
+## Phase: Screen inventory, wireframes, and design system — 2026-09-23
+
+**What I asked for**: Create `specs/001-quiz-app-core/ui.md` from `spec.md`, `traceability.md`, and `docs/brief.md` — no code. Every screen for all three roles (student, teacher, admin) with purpose, route, FR IDs, and data/API needs; a mobile (375px) ASCII wireframe per screen plus desktop deltas; loading/empty/error/domain states; full bilingual (English + Arabic RTL) wireframes specifically for the Student "Taking Quiz" and "My Quizzes" screens, with RTL differences described in prose for every other screen; a design system (colors with WCAG AA contrast, type scale, spacing, font, buttons, cards, form fields, responsive tables, tap targets, timer states, RTL rules); a navigation map per role; an update to `traceability.md` with the actual screen names; and an ai-log entry.
+
+**What you produced**:
+- `specs/001-quiz-app-core/ui.md`: a design system (§1, 11 subsections) with concrete hex values and stated contrast ratios for the neutral/accent/success/warning/danger palette, a type scale with separate Latin/Arabic line-heights, self-hosted Noto Sans Arabic + Noto Sans via `@fontsource`, and explicit RTL rules (logical CSS properties only, which icons mirror vs. don't, numerals staying Western/LTR inside RTL text); three navigation maps (student/teacher/admin, ASCII flow diagrams); 19 screens total (7 student, 5 teacher, 7 admin — split "Classes" into list + detail, and "Users" into list + import, since the brief's screen list bundled several distinct actions into one line), each with purpose/route/FR IDs/API sketch, a mobile wireframe, a desktop-delta description, and loading/empty/error/domain states.
+- Full bilingual wireframes for Student "My Quizzes" and "Taking Quiz" (including the question-jump grid as a bottom sheet in both languages), with explicit notes on what mirrors (Prev/Next arrows and position, progress bar fill direction, header item order) versus what doesn't (numerals, the timer icon, Latin option letters A–D).
+- Updated `traceability.md`: replaced every prose screen description with the exact screen IDs from `ui.md` (S1–S7/T1–T5/A1–A7), added a legend mapping IDs to names, and added two new rows for decisions that only became concrete while writing the wireframes (the Submit Confirmation screen's unanswered-count warning, and the Review screen being separate from Result).
+
+**What went wrong or needed correction**: Nothing required your correction this phase. My own judgment calls, made explicit in the doc rather than silently decided: split "Classes" and "Users" (each one bullet in your screen list) into two screens apiece (list vs. detail/import) because they have genuinely different states and actions (e.g., delete-refusal logic lives on Class Detail, not the Classes list); made "Submit Confirmation" a modal/step over the Taking Quiz route rather than a standalone persisted route, since it only exists mid-attempt; and reused a single "Quiz Results" screen (T5) for both the teacher's own view and the admin's unfiltered view (A6/A7 route to it) rather than drawing a duplicate admin-only results screen, matching FR-031c's "same screens... without the ownership filter" literally.
+
+**How it was verified**: Re-read every FR ID cited in `ui.md` against the current `spec.md` text to confirm each screen's stated FRs actually match what that FR requires (not just a plausible-sounding association). Cross-checked that every screen named in the Student/Teacher/Admin navigation maps also has a corresponding numbered screen entry (no dangling references). Re-read `traceability.md` after editing to confirm every row's screen reference resolves to an ID defined in `ui.md`'s legend. No application code or automated tests exist yet — this is a design/documentation artifact, not something to run.
+
+**My notes:**
+
