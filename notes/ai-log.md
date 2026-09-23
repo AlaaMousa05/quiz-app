@@ -125,3 +125,16 @@ Running log of AI-assisted work on this project, one entry per phase. See CLAUDE
 
 **My notes:**
 
+
+## Phase: Task breakdown (`/speckit-tasks`) — 2026-09-23
+
+**What I asked for**: Run `/speckit-tasks` grouping tasks by the 11 phases in plan.md (not by user story). In every phase touching scoring/timing/attempts/auth/imports, put test tasks before implementation tasks. End every implementation phase with a quality-gate task (from CLAUDE.md) and a commit task. Reference the test names from traceability.md.
+
+**What you produced**: `specs/001-quiz-app-core/tasks.md` — 106 tasks (T001–T106) grouped into the 11 plan.md phases. Test-first ordering applied in phases 2 (auth), 3 (scoring), 4 (timing/attempts), 6 (imports), 8 (imports + credential creation): the test tasks are listed and required to fail before the implementation tasks. Every phase ends with a "Quality gate" task then a "Commit" task; the quality-gate tasks note which phases include the `/code-review` medium step (2, 3, 4, 6, 8, 10) versus those that run the gate without it, and phase 11 carries the project-end `/code-review` high + `/security-review`. Test tasks reference the exact planned test names from traceability.md (e.g. `attempt.spec: duplicate attempt blocked under concurrent/double-submit/two-tab requests`, `scoring.spec: total score floors at zero`, `search.spec: Arabic name search ignores diacritics and normalizes alef variants`). Added a Dependencies/Execution-Order section, per-phase parallel opportunities, and an MVP definition (phases 1–5).
+
+**What went wrong or needed correction**: Nothing required correction. One deliberate structural choice worth noting: the speckit tasks template organizes by user story, but you explicitly asked for grouping by the 11 plan.md phases, so I followed the plan's phase structure and mapped the ui.md screen IDs / user stories into the relevant phases (e.g. US1/S1–S7 span phases 2, 4, 5) rather than making user stories the top-level grouping. I also reconciled the quality gate's `/code-review` trigger list against the just-revised plan.md (phases 2/3/4/6/8 touch the trigger areas; unpublish/restore logic added in the last turn falls in phases 6 and 8, already covered).
+
+**How it was verified**: Checked every task line against the required checklist format (checkbox + sequential Tnnn + description + file path). Confirmed each of the 11 phases ends with a quality-gate task immediately followed by a commit task (T011/T012, T029/T030, T035/T036, T045/T046, T057/T058, T068/T069, T076/T077, T089/T090, T095/T096, T100/T101, T105/T106). Confirmed test tasks precede implementation tasks in phases 2/3/4/6/8. Cross-checked the referenced test names against traceability.md to confirm they exist there verbatim. No code or tests to run — this is a planning artifact.
+
+**My notes:**
+
