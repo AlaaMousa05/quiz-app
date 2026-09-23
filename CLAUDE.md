@@ -1,5 +1,7 @@
 # Quiz app - Nour's tutoring centre
 
+Source of truth for requirements: docs/brief.md (client brief + assessment rules). Re-read it before planning any phase.
+
 ## Stack
 React + Vite + TypeScript + Tailwind (client/), Express + TypeScript + Prisma + PostgreSQL + Zod (server/), Vitest + Supertest, Docker Compose.
 
