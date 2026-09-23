@@ -58,3 +58,11 @@ export function scoreAttempt(
 ): Decimal {
   return Decimal.max(0, computeRawScore(questions, answers, negMarking));
 }
+
+// Shared by every place that needs a quiz/attempt's max achievable points
+// (attempt.service, attemptFinalize.service, studentQuiz.service) — takes
+// anything with a `points` field so callers don't need to reshape into
+// ScoringQuestion[] first.
+export function sumPoints(questions: Array<{ points: Decimal }>): Decimal {
+  return questions.reduce((total, q) => total.plus(q.points), new Decimal(0));
+}

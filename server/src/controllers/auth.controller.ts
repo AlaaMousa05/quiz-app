@@ -19,6 +19,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
       req.session.role = user.role;
       req.session.name = user.name;
       req.session.username = user.username;
+      req.session.classId = user.classId;
       res.json({ role: user.role, name: user.name, username: user.username });
     });
   } catch (err) {

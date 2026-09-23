@@ -21,6 +21,7 @@ export const ar: Record<TranslationKey, string> = {
   "error.validation": "يرجى مراجعة ما أدخلته والمحاولة مرة أخرى.",
   "error.conflict": "لا يمكن تنفيذ ذلك الآن.",
   "error.deadlinePassed": "لقد انتهى الموعد النهائي لذلك.",
+  "error.attemptFinalized": "تم إنهاء هذه المحاولة بالفعل.",
   "error.generic": "حدث خطأ ما. حاول مرة أخرى.",
 
   "role.student.home": "الصفحة الرئيسية للطالب",

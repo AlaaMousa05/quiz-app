@@ -8,6 +8,7 @@ export interface AuthenticatedUser {
   role: Role;
   name: string;
   username: string;
+  classId: string | null;
 }
 
 // Not a real user's hash — only exists so bcrypt.compare always runs the same
@@ -28,5 +29,5 @@ export async function login(username: string, password: string): Promise<Authent
     throw new ForbiddenError("This account has been deactivated.", "auth.deactivated");
   }
 
-  return { id: user.id, role: user.role as Role, name: user.name, username: user.username };
+  return { id: user.id, role: user.role as Role, name: user.name, username: user.username, classId: user.classId };
 }

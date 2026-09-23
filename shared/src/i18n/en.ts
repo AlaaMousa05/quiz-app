@@ -19,6 +19,7 @@ export const en = {
   "error.validation": "Please check what you entered and try again.",
   "error.conflict": "That can't be done right now.",
   "error.deadlinePassed": "The deadline for this has passed.",
+  "error.attemptFinalized": "This attempt has already been finalized.",
   "error.generic": "Something went wrong. Please try again.",
 
   "role.student.home": "Student home",

@@ -53,3 +53,18 @@ docker run -d --name quizapp-test-db -e POSTGRES_USER=quizapp -e POSTGRES_PASSWO
 ## Auth + i18n (Phase 2)
 
 Session-based login (`POST /api/auth/login`, cookie-based, `httpOnly`) exists for all three roles (ADMIN/TEACHER/STUDENT); role-guarded landing pages exist for each at `/student`, `/teacher`, `/admin`. The UI is bilingual (English/Arabic, RTL) — toggle the language from the button on the login screen or any role home screen; the choice persists per device (`localStorage`) and the browser's language is used as the default on first visit.
+
+## Student quiz-taking API (Phase 4)
+
+Server-authoritative attempt lifecycle for STUDENT accounts, mounted under `/api` (see `specs/001-quiz-app-core/contracts/student-quizzes.md` for full request/response shapes):
+
+- `GET /api/quizzes` — the student's own class's published quizzes, bucketed into open/upcoming/done.
+- `GET /api/quizzes/:quizId` — quiz intro (time limit, points, negative-marking config); 404 for a draft, nonexistent, or other-class quiz.
+- `POST /api/quizzes/:quizId/attempts` — start an attempt; 409 if one already exists (DB-unique-constraint-backed), 403 outside `[opensAt, closesAt]`.
+- `GET /api/attempts/:attemptId` — resume: current answers, remaining time, never the correct option.
+- `PATCH /api/attempts/:attemptId/answers` — autosave one answer; 409 more than 10s past the deadline, 410 if already finalized.
+- `POST /api/attempts/:attemptId/submit` — server-computed score from stored answers only; same 409/410 rules.
+- `GET /api/attempts/:attemptId/result` — score only; lazily auto-finalizes an expired, never-submitted attempt on first read.
+- `GET /api/attempts/:attemptId/review` — per-question breakdown; 403 until the quiz has closed *and* this attempt can no longer be submitted.
+
+No client is wired to these yet (client UI lands in Phase 5) — exercise them with `curl`/Postman or the integration tests under `server/tests/integration/student-quizzes.*.test.ts`.

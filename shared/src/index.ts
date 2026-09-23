@@ -6,3 +6,5 @@ export { ar } from "./i18n/ar.js";
 export type { TranslationKey } from "./i18n/en.js";
 export { loginSchema } from "./schemas/auth.schema.js";
 export type { LoginInput } from "./schemas/auth.schema.js";
+export { answerSaveSchema } from "./schemas/attempt.schema.js";
+export type { AnswerSaveInput } from "./schemas/attempt.schema.js";

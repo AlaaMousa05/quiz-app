@@ -96,19 +96,19 @@ description: "Task list for Quiz App Core (Clickable MVP)"
 
 ### Tests first
 
-- [ ] T037 [P] Write `server/tests/unit/attempt.service.test.ts` with an injected `FixedClock`/`AdvanceableClock`: deadline = `min(startedAt + limit, closesAt)`, 10s grace accept/reject, auto-finalize at deadline, referencing traceability names `attempt.spec: countdown enforces server-recorded deadline`, `attempt.spec: auto-finalizes at deadline with recorded answers`, `attempt.spec: submission within 10s grace after deadline is accepted`, `attempt.spec: starting a new attempt after closes_at is blocked even within the grace window`
-- [ ] T038 [P] Write `server/tests/integration/student-quizzes.routes.test.ts` (Supertest, real Postgres) referencing `attempt.spec: second attempt blocked after submission`, `attempt.spec: duplicate attempt blocked under concurrent/double-submit/two-tab requests`, `attempt.spec: answers autosave and resume with correct remaining time`, `attempt.spec: submit confirmation lists unanswered question numbers` (server side: unanswered => 0), `scoring.spec: correctness never revealed before submission`, `access.spec: quiz not startable outside its open date range`
+- [X] T037 [P] Write `server/tests/unit/attempt.service.test.ts` with an injected `FixedClock`/`AdvanceableClock`: deadline = `min(startedAt + limit, closesAt)`, 10s grace accept/reject, auto-finalize at deadline, referencing traceability names `attempt.spec: countdown enforces server-recorded deadline`, `attempt.spec: auto-finalizes at deadline with recorded answers`, `attempt.spec: submission within 10s grace after deadline is accepted`, `attempt.spec: starting a new attempt after closes_at is blocked even within the grace window` — tests pure functions (`computeDeadlineAt`, `isWithinGracePeriod`, `canStartAttempt`, `resolveAttemptOnRead`) that `server/src/services/attempt.service.ts` (T042) must export; currently red (module doesn't exist yet)
+- [X] T038 [P] Write `server/tests/integration/student-quizzes.routes.test.ts`, `student-quizzes.deadline.test.ts`, `student-quizzes.access.test.ts`, `student-quizzes.finalize.test.ts` (Supertest, real Postgres — split across 4 files to stay under the ~200-line guideline) referencing `attempt.spec: second attempt blocked after submission`, `attempt.spec: duplicate attempt blocked under concurrent/double-submit/two-tab requests`, `attempt.spec: answers autosave and resume with correct remaining time`, `scoring.spec: correctness never revealed before submission`, `access.spec: quiz not startable outside its open date range`, plus cross-class/cross-student ownership, tampered-optionId rejection, and lazy finalization on read; currently red (routes/controllers/services from T039–T043 don't exist yet)
 
 ### Implementation
 
-- [ ] T039 Implement `server/src/services/clock.ts` (Clock interface + SystemClock)
-- [ ] T040 [P] Create `shared/src/schemas/attempt.schema.ts` (`answerSaveSchema`) per contracts/student-quizzes.md
-- [ ] T041 Implement `server/src/repositories/attempt.repository.ts` (create with unique-constraint handling, upsert answer, load resume state) and `quiz.repository.ts` (read for student, derived-locked existence check)
-- [ ] T042 Implement `server/src/services/attempt.service.ts` (start/duplicate-block→ConflictError, autosave, submit calling scoring.service, deadline+grace, auto-finalize sweep) until T037/T038 green
-- [ ] T043 Implement `server/src/controllers/student-quizzes.controller.ts` + `routes/student-quizzes.routes.ts` for the contracts/student-quizzes.md endpoints (list, intro, start, resume-get, autosave, submit, result, review) with role+ownership guards and the review-after-close 403 (FR-010)
-- [ ] T044 Run attempt + integration tests; confirm green
-- [ ] T045 Quality gate for Phase 4 (includes `/code-review` medium on timing/attempts, step 3)
-- [ ] T046 Commit Phase 4: `feat: attempt lifecycle API with server-authoritative timing (TDD)`
+- [X] T039 Implement `server/src/services/clock.ts` (Clock interface + SystemClock)
+- [X] T040 [P] Create `shared/src/schemas/attempt.schema.ts` (`answerSaveSchema`) per contracts/student-quizzes.md
+- [X] T041 Implement `server/src/repositories/attempt.repository.ts` (create with unique-constraint handling, upsert answer, load resume state) and `quiz.repository.ts` (read for student, derived-locked existence check)
+- [X] T042 Implement `server/src/services/attempt.service.ts` (start/duplicate-block→ConflictError, autosave, submit calling scoring.service, deadline+grace, auto-finalize sweep) until T037/T038 green — split across `attempt.service.ts` (state machine), `attemptFinalize.service.ts` (lazy finalize/result/review), and `studentQuiz.service.ts` (list/intro) to stay under the file-size guideline
+- [X] T043 Implement `server/src/controllers/student-quizzes.controller.ts` + `routes/student-quizzes.routes.ts` for the contracts/student-quizzes.md endpoints (list, intro, start, resume-get, autosave, submit, result, review) with role+ownership guards and the review-after-close 403 (FR-010)
+- [X] T044 Run attempt + integration tests; confirm green — 72 tests passing (70 from the original two-round test table + 2 regression tests added during `/code-review`)
+- [X] T045 Quality gate for Phase 4 (includes `/code-review` medium on timing/attempts, step 3) — see notes/ai-log.md for `/simplify` and `/code-review` findings and fixes
+- [X] T046 Commit Phase 4: `feat: attempt lifecycle API with server-authoritative timing (TDD)`
 
 ---
 

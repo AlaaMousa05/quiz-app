@@ -7,5 +7,6 @@ declare module "express-session" {
     role?: Role;
     name?: string;
     username?: string;
+    classId?: string | null;
   }
 }
