@@ -82,7 +82,7 @@ description: "Task list for Quiz App Core (Clickable MVP)"
 
 ### Implementation
 
-- [ ] T032 Create `shared/src/schemas/quiz.schema.ts` + `question.schema.ts` (points/penalty/option shape) so scoring inputs are typed once — deferred: not needed by T031's pure-function test surface; pick up when a real caller (Phase 4's attempt.service, or Phase 6's quiz editor) needs request-body validation
+- ~~T032~~ Merged into T063 (Phase 6) — `quiz.schema.ts` + `question.schema.ts` weren't needed by T031's pure-function test surface, and `quiz.service.ts` (T063) is their first real caller, so they're created there instead of as a standalone task.
 - [X] T033 Implement `server/src/services/scoring.service.ts` as pure functions (Decimal math, penalty = fraction × question points, unanswered = 0, total floored at 0) until T031 is green
 - [X] T034 Run scoring tests; confirm green
 - [X] T035 Quality gate for Phase 3 (includes `/code-review` medium on scoring, step 3)
@@ -149,7 +149,7 @@ description: "Task list for Quiz App Core (Clickable MVP)"
 
 - [ ] T061 [P] Create `shared/src/schemas/import.schema.ts` (preview/confirm shapes, encoding rule) per contracts/imports.md
 - [ ] T062 Implement `server/src/services/import.service.ts` (strict UTF-8 decode + BOM strip, exceljs/csv-parse row parsing, per-row validation, in-memory preview) and `repositories/importBatch.repository.ts`
-- [ ] T063 Implement `server/src/services/quiz.service.ts` (create/update with FR-024 lock, publish, unpublish-if-unlocked FR-004a, exactly-4-options/1-correct validation) and `repositories/quiz.repository.ts` write paths
+- [ ] T063 Create `shared/src/schemas/quiz.schema.ts` (`quizSettingsSchema`: non-empty `title`, `closesAt > opensAt`, positive-int `timeLimitMinutes`, non-empty `classIds`, `negMarkPenalty` in `[0,1]` when `negMarkEnabled`) and `shared/src/schemas/question.schema.ts` (`questionSchema`: exactly 4 `options`, exactly 1 `isCorrect: true`, `points > 0`) per contracts/teacher-quizzes.md — merged from T032, since this is their first real caller. Then implement `server/src/services/quiz.service.ts` (create/update with FR-024 lock, publish, unpublish-if-unlocked FR-004a, exactly-4-options/1-correct validation) and `repositories/quiz.repository.ts` write paths
 - [ ] T064 Implement `server/src/controllers/teacher-quizzes.controller.ts` + `imports.controller.ts` and their routes (contracts/teacher-quizzes.md, contracts/imports.md quiz flow) with owner-ownership guards
 - [ ] T065 [P] Implement `client/src/features/quiz-editor/` api/ + hooks/ (`useImportPreview.ts`) — write `client/tests/hooks/useImportPreview.test.ts` first
 - [ ] T066 Build T1 My Quizzes, T2 Create/Edit Settings (locked-field mode after attempts), T3 Questions Editor (publish/unpublish), T4 Import Quiz (preview + per-row errors)
