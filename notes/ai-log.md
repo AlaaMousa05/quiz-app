@@ -155,3 +155,4 @@ Running log of AI-assisted work on this project, one entry per phase. See CLAUDE
 
 **My notes:**
 
+My notes: I verified the clean start myself: `docker compose down -v` then `docker compose up --build` with no local npm install. It worked with the single command: migration applied, server on port 3000, /api/health returned ok. Docker Desktop must be running first on Windows (add to README). I noticed the build shipped unused font subsets (Cyrillic, Devanagari) and asked for Arabic + Latin only in Phase 2.
