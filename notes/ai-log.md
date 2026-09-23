@@ -177,3 +177,13 @@ My notes: I verified the clean start myself: `docker compose down -v` then `dock
 Structure re-check: no file over ~200 lines, no Prisma import outside `repositories/`, no `fetch` outside `lib/apiClient.ts`/feature `api/` folders. Two accepted lint warnings remain, both justified: `client/src/main.tsx`'s non-null assertion (pre-existing, commented) and `LoginForm`'s function-body length (46 lines against the 40-line soft limit — a form with two labeled fields and error/submit states; splitting further would fragment one cohesive form into pieces with no second caller, so left as a warning per CLAUDE.md's "no abstraction without a second use").
 
 **My notes:**
+
+I manually tested Phase 2 end to end in the browser after the docker compose rebuild:
+- Login screen loads at http://localhost:3000, language toggle flips the whole page to Arabic/RTL and back, and the choice persists after a reload.
+- demo-student logs in and lands on /student.
+- As the logged-in student, navigating directly to /teacher shows "You don't have access to this page" instead of the teacher screen — role guard works.
+- Logged out, logged in as demo-teacher, correctly lands on /teacher.
+- Wrong password shows "Incorrect username or password" in the current UI language.
+- Asked Claude to seed a throwaway demo-admin account to test /admin the same way: logged in, reached /admin; as student/teacher, /admin was blocked; language toggle worked there too.
+- The two real security bugs (login timing side-channel, session fixation) and the secure-cookie-over-HTTP login bug were all caught by Claude's own testing and code-review, not by me — worth being honest about that split in AI_USAGE.md. My own manual pass mainly confirmed the role/i18n/UX behaviour.
+
