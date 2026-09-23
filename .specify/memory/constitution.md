@@ -1,25 +1,20 @@
 <!--
 Sync Impact Report
 ==================
-Version: (initial) → 1.0.0
-Rationale: Initial ratification. The project owner supplied a complete set of 8
-core principles directly; this is the first committed version of the
-constitution, so it is the MAJOR 1.0.0 baseline rather than an amendment.
+Version change: 1.0.0 → 1.1.0
+Rationale: Added a new core principle (IX. Clean, Layered, Small Units) covering
+code structure and quality — a new principle with no redefinition or removal of
+existing ones, so this is a MINOR bump per the versioning policy below.
 
-Principles adopted:
-- I. Server Is the Single Source of Truth for Time, Attempts & Scoring
-- II. Correctness Under Bad Behaviour
-- III. Least Privilege on Every Endpoint
-- IV. Mobile-First
-- V. Arabic Is First-Class
-- VI. Tests First for Scoring, Timing & Attempt Rules
-- VII. Simplicity
-- VIII. Every Assumption Is Written Down
+Modified principles: none (all eight existing principles unchanged).
 
-Added sections: Delivery & Documentation Constraints; Workflow & Commit
-Discipline; Governance.
+Added principles:
+- IX. Clean, Layered, Small Units
 
-Removed sections: none (initial adoption).
+Added sections: none new at the top level (Principle IX lives under Core
+Principles alongside the existing eight).
+
+Removed sections: none.
 
 Templates requiring updates:
 - ✅ .specify/templates/plan-template.md — Constitution Check gate reads
@@ -28,9 +23,8 @@ Templates requiring updates:
   reviewed, no changes needed.
 - ✅ .specify/templates/tasks-template.md — no constitution-specific references;
   reviewed, no changes needed.
-- ✅ CLAUDE.md — synced to carry the same non-negotiable rules (including
-  "correctness under bad behaviour" test scenarios and "no feature without a
-  reason in DECISIONS.md").
+- ✅ CLAUDE.md — added a new "Code structure and quality" section carrying the
+  same layering/size/tooling rules that back this principle.
 - ✅ docs/brief.md — source material, unchanged (client brief, not governance).
 
 Follow-up TODOs: none.
@@ -122,6 +116,31 @@ Rationale: The client brief has gaps by design; undocumented assumptions are
 invisible to reviewers and to the client, and cannot be revisited or corrected
 later if no one recorded that they were made.
 
+### IX. Clean, Layered, Small Units
+Code MUST be organized into small, single-responsibility units and MUST NOT be
+over-engineered: apply SOLID pragmatically (single responsibility per file or
+function; dependency injection only where it enables testing — e.g., an
+injected clock or repository — never as decoration), and introduce no
+abstraction (interface, factory, or pattern) without a second concrete use or a
+testing need. Soft size limits apply — roughly 200 lines per file, 150 lines
+per React component, 40 lines per function — and a unit exceeding them MUST be
+split by responsibility. The backend MUST be layered (routes → controllers →
+services → repositories, with errors and configuration as their own concerns)
+so that business logic never touches HTTP objects and never talks to the
+database directly; the frontend MUST separate data-fetching, logic/state, and
+presentation so that a component with no fetching or business logic stays
+presentational. The single, dual-used definition of every request/response
+contract (schema plus type) MUST live in one shared location so client and
+server cannot silently drift apart, and the client and server MUST NOT import
+from each other directly. Tests MUST mirror this structure — services
+unit-tested, HTTP routes integration-tested, and any hook or module with real
+logic (e.g., a timer or autosave) tested on its own.
+
+Rationale: A first-clickable-version timeline invites shortcuts that calcify
+into permanent structure; naming the layering and size limits now — before
+code exists — is cheaper than untangling a monolith later, and keeps the
+codebase reviewable by someone other than the AI that wrote it.
+
 ## Delivery & Documentation Constraints
 
 - Stack: React + Vite + TypeScript + Tailwind (`client/`); Express + TypeScript +
@@ -172,4 +191,4 @@ CLAUDE.md carries day-to-day runtime agent guidance derived from this
 constitution; where the two conflict, this constitution is authoritative and
 CLAUDE.md MUST be updated to match.
 
-**Version**: 1.0.0 | **Ratified**: 2026-09-23 | **Last Amended**: 2026-09-23
+**Version**: 1.1.0 | **Ratified**: 2026-09-23 | **Last Amended**: 2026-09-23
