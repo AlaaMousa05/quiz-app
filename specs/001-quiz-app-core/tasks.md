@@ -78,15 +78,15 @@ description: "Task list for Quiz App Core (Clickable MVP)"
 
 ### Tests first
 
-- [ ] T031 [P] Write `server/tests/unit/scoring.service.test.ts` referencing traceability names: `scoring.spec: negative-marking penalty applies configured fraction of question points`, `scoring.spec: total score floors at zero`, `scoring.spec: score shown immediately after submit` (score computation part), plus correct/incorrect/unanswered cases and no-negative-marking case (FR-012, FR-012b)
+- [X] T031 [P] Write `server/tests/unit/scoring.service.test.ts` referencing traceability names: `scoring.spec: negative-marking penalty applies configured fraction of question points`, `scoring.spec: total score floors at zero`, `scoring.spec: score shown immediately after submit` (score computation part), plus correct/incorrect/unanswered cases and no-negative-marking case (FR-012, FR-012b)
 
 ### Implementation
 
-- [ ] T032 Create `shared/src/schemas/quiz.schema.ts` + `question.schema.ts` (points/penalty/option shape) so scoring inputs are typed once
-- [ ] T033 Implement `server/src/services/scoring.service.ts` as pure functions (Decimal math, penalty = fraction × question points, unanswered = 0, total floored at 0) until T031 is green
-- [ ] T034 Run scoring tests; confirm green
-- [ ] T035 Quality gate for Phase 3 (includes `/code-review` medium on scoring, step 3)
-- [ ] T036 Commit Phase 3: `feat: scoring service with negative marking (TDD)`
+- [ ] T032 Create `shared/src/schemas/quiz.schema.ts` + `question.schema.ts` (points/penalty/option shape) so scoring inputs are typed once — deferred: not needed by T031's pure-function test surface; pick up when a real caller (Phase 4's attempt.service, or Phase 6's quiz editor) needs request-body validation
+- [X] T033 Implement `server/src/services/scoring.service.ts` as pure functions (Decimal math, penalty = fraction × question points, unanswered = 0, total floored at 0) until T031 is green
+- [X] T034 Run scoring tests; confirm green
+- [X] T035 Quality gate for Phase 3 (includes `/code-review` medium on scoring, step 3)
+- [X] T036 Commit Phase 3: `feat: scoring service with negative marking (TDD)`
 
 ---
 
