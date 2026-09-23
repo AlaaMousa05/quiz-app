@@ -27,18 +27,18 @@ description: "Task list for Quiz App Core (Clickable MVP)"
 
 **Goal**: A running two-container skeleton (`db`, `app`) with the monorepo layout, Prisma schema/migration, and lint tooling — nothing feature-specific yet.
 
-- [ ] T001 Create npm-workspaces root `package.json` with `"workspaces": ["client","server","shared"]` and root scripts (`lint`, `test`, `dev`, `build`) fanning out to workspaces
-- [ ] T002 [P] Scaffold `shared/` workspace: `package.json`, `tsconfig.json`, empty `src/schemas/`, `src/i18n/`, `src/arabicName.ts` placeholder
-- [ ] T003 [P] Scaffold `server/` workspace: `package.json`, `tsconfig.json` (strict mode), `src/app.ts` + `src/server.ts` Express skeleton
-- [ ] T004 [P] Scaffold `client/` workspace: Vite + React + TS, `tailwind.config.ts` restricted to logical properties (no left/right utilities), `@fontsource/noto-sans` + `@fontsource/noto-sans-arabic` self-hosted
-- [ ] T005 [P] Add ESLint + Prettier config to `server/.eslintrc.cjs` and `client/.eslintrc.cjs`: `max-lines: [warn,200]`, `max-lines-per-function: [warn,40]`, `@typescript-eslint/no-explicit-any: error`, `@typescript-eslint/no-non-null-assertion: warn` (per research.md)
-- [ ] T006 Author `server/prisma/schema.prisma` with all entities from data-model.md (User, Class, Quiz, QuizClass, Question, Option, Attempt, Answer, ImportBatch), including `@@unique([quizId, studentId])` on Attempt, composite PK on Answer/QuizClass, all `Decimal` score/points/penalty columns, and the `nameNormalized` column with an index
-- [ ] T007 Generate the initial Prisma migration and wire `prisma migrate deploy` + conditional seed (only if `User` count is 0, per research.md) into the `app` container start
-- [ ] T008 [P] Write `Dockerfile` (build client → build server → single `app` image serving both) and `docker-compose.yml` with `db` and `app` services; add `.env.example`
-- [ ] T009 [P] Add `server/src/config/env.ts` validating environment variables with Zod at startup
-- [ ] T010 Verify `docker compose up --build` brings up both services and the app serves a placeholder page (quickstart.md step 1)
-- [ ] T011 Quality gate for Phase 1 (lint + tests, `/simplify`, structure re-check, re-run lint + tests, log to `notes/ai-log.md`; no `/code-review` step — no scoring/timing/attempt/auth/import code yet)
-- [ ] T012 Commit Phase 1: `chore: scaffold monorepo, docker compose, prisma schema`
+- [X] T001 Create npm-workspaces root `package.json` with `"workspaces": ["client","server","shared"]` and root scripts (`lint`, `test`, `dev`, `build`) fanning out to workspaces
+- [X] T002 [P] Scaffold `shared/` workspace: `package.json`, `tsconfig.json`, empty `src/schemas/`, `src/i18n/`, `src/arabicName.ts` placeholder
+- [X] T003 [P] Scaffold `server/` workspace: `package.json`, `tsconfig.json` (strict mode), `src/app.ts` + `src/server.ts` Express skeleton
+- [X] T004 [P] Scaffold `client/` workspace: Vite + React + TS, `tailwind.config.ts` restricted to logical properties (no left/right utilities), `@fontsource/noto-sans` + `@fontsource/noto-sans-arabic` self-hosted
+- [X] T005 [P] Add ESLint + Prettier config to `server/.eslintrc.cjs` and `client/.eslintrc.cjs`: `max-lines: [warn,200]`, `max-lines-per-function: [warn,40]`, `@typescript-eslint/no-explicit-any: error`, `@typescript-eslint/no-non-null-assertion: warn` (per research.md)
+- [X] T006 Author `server/prisma/schema.prisma` with all entities from data-model.md (User, Class, Quiz, QuizClass, Question, Option, Attempt, Answer, ImportBatch), including `@@unique([quizId, studentId])` on Attempt, composite PK on Answer/QuizClass, all `Decimal` score/points/penalty columns, and the `nameNormalized` column with an index
+- [X] T007 Generate the initial Prisma migration and wire `prisma migrate deploy` + conditional seed (only if `User` count is 0, per research.md) into the `app` container start
+- [X] T008 [P] Write `Dockerfile` (build client → build server → single `app` image serving both) and `docker-compose.yml` with `db` and `app` services; add `.env.example`
+- [X] T009 [P] Add `server/src/config/env.ts` validating environment variables with Zod at startup
+- [X] T010 Verify `docker compose up --build` brings up both services and the app serves a placeholder page (quickstart.md step 1)
+- [X] T011 Quality gate for Phase 1 (lint + tests, `/simplify`, structure re-check, re-run lint + tests, log to `notes/ai-log.md`; no `/code-review` step — no scoring/timing/attempt/auth/import code yet)
+- [X] T012 Commit Phase 1: `chore: scaffold monorepo, docker compose, prisma schema`
 
 ---
 

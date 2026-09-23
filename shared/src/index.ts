@@ -1,0 +1,1 @@
+export { normalizeArabicName } from "./arabicName";

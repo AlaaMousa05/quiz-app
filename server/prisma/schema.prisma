@@ -1,0 +1,178 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  TEACHER
+  STUDENT
+}
+
+enum UserStatus {
+  ACTIVE
+  DEACTIVATED
+}
+
+enum ClassStatus {
+  ACTIVE
+  ARCHIVED
+}
+
+enum QuizStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum AttemptStatus {
+  IN_PROGRESS
+  SUBMITTED
+  AUTO_FINALIZED
+}
+
+enum ImportType {
+  STUDENTS
+  TEACHERS
+  QUIZ
+}
+
+model User {
+  id                     String   @id @default(cuid())
+  role                   Role
+  name                   String
+  nameNormalized         String
+  username               String   @unique
+  passwordHash           String
+  status                 UserStatus @default(ACTIVE)
+  classId                String?
+  class                  Class?   @relation(fields: [classId], references: [id])
+  negMarkDefaultEnabled  Boolean?
+  negMarkDefaultPenalty  Decimal? @db.Decimal(3, 2)
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  ownedQuizzes   Quiz[]        @relation("QuizOwner")
+  attempts       Attempt[]
+  importBatches  ImportBatch[]
+
+  @@index([nameNormalized])
+}
+
+model Class {
+  id        String      @id @default(cuid())
+  name      String      @unique
+  status    ClassStatus @default(ACTIVE)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  students User[]
+  quizzes  QuizClass[]
+}
+
+model Quiz {
+  id              String     @id @default(cuid())
+  title           String
+  ownerTeacherId  String
+  ownerTeacher    User       @relation("QuizOwner", fields: [ownerTeacherId], references: [id])
+  status          QuizStatus @default(DRAFT)
+  opensAt         DateTime
+  closesAt        DateTime
+  timeLimitMinutes Int       @default(20)
+  negMarkEnabled  Boolean    @default(false)
+  negMarkPenalty  Decimal    @default(0) @db.Decimal(3, 2)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  classes   QuizClass[]
+  questions Question[]
+  attempts  Attempt[]
+
+  @@index([ownerTeacherId])
+}
+
+model QuizClass {
+  quizId  String
+  classId String
+  quiz    Quiz  @relation(fields: [quizId], references: [id])
+  class   Class @relation(fields: [classId], references: [id])
+
+  @@id([quizId, classId])
+}
+
+model Question {
+  id         String   @id @default(cuid())
+  quizId     String
+  quiz       Quiz     @relation(fields: [quizId], references: [id])
+  text       String
+  points     Decimal  @db.Decimal(6, 2)
+  orderIndex Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  options Option[]
+  answers Answer[]
+
+  @@index([quizId])
+}
+
+model Option {
+  id         String   @id @default(cuid())
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id])
+  text       String
+  isCorrect  Boolean
+  orderIndex Int
+
+  answers Answer[]
+
+  @@index([questionId])
+}
+
+model Attempt {
+  id          String        @id @default(cuid())
+  quizId      String
+  quiz        Quiz          @relation(fields: [quizId], references: [id])
+  studentId   String
+  student     User          @relation(fields: [studentId], references: [id])
+  startedAt   DateTime
+  deadlineAt  DateTime
+  submittedAt DateTime?
+  status      AttemptStatus @default(IN_PROGRESS)
+  score       Decimal?      @db.Decimal(6, 2)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  answers Answer[]
+
+  @@unique([quizId, studentId])
+}
+
+model Answer {
+  attemptId  String
+  attempt    Attempt  @relation(fields: [attemptId], references: [id])
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id])
+  optionId   String?
+  option     Option?  @relation(fields: [optionId], references: [id])
+  answeredAt DateTime @default(now())
+
+  @@id([attemptId, questionId])
+}
+
+model ImportBatch {
+  id                  String     @id @default(cuid())
+  type                ImportType
+  uploadedByUserId    String
+  uploadedByUser      User       @relation(fields: [uploadedByUserId], references: [id])
+  fileName            String
+  rowsTotal           Int
+  rowsCreated         Int
+  rowsSkippedDuplicate Int
+  rowsFailed          Int
+  createdAt           DateTime   @default(now())
+}
