@@ -65,6 +65,17 @@ Tests mirror the source structure: services are unit-tested, routes get Supertes
 - Write tests before changing scoring, timing, attempt or permission logic.
 - Run tests before every commit.
 
+## Quality gate (end of every implementation phase)
+At the end of every implementation phase, before the phase's final commit, run these steps yourself, in order, without waiting for me to ask:
+1. Run lint and all tests. Everything must pass.
+2. Run the /simplify skill on the code changed in this phase, and apply its fixes.
+3. In phases that touch scoring, timing, attempts, auth/permissions or imports, also run the /code-review skill at medium effort on the phase's changes, and fix every confirmed finding. At the end of the whole project, run /code-review at high effort and /security-review on the full codebase.
+4. Check the "Code structure and quality" rules: file and function size limits, layering (no Prisma outside repositories, no fetch outside feature api/, no logic in presentational components). Split anything that breaks them.
+5. Run lint and tests again after the fixes.
+6. In notes/ai-log.md, record what /simplify and /code-review found and what you changed. Be specific (e.g. "code-review found submit could grade twice under parallel requests; fixed with conditional UPDATE, added test"). Findings you decided not to fix go in the log with the reason.
+
+Only then make the phase's final commit.
+
 ## Documentation duties (end of every phase, before committing)
 - README.md: keep run commands, seed instructions and demo logins exactly accurate. If ports, env vars, scripts or seed users change, update README in the same commit.
 - DECISIONS.md: every assumption made or approved goes under the right section (Assumptions / Built but not asked for / Deliberately left out / Next week) with a one-line why.
