@@ -21,4 +21,10 @@ module.exports = {
     ...base.rules,
     "react/react-in-jsx-scope": "off",
   },
+  overrides: [
+    {
+      files: ["tests/**/*.{ts,tsx}", "src/**/*.test.{ts,tsx}"],
+      rules: { "max-lines-per-function": "off" },
+    },
+  ],
 };

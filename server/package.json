@@ -7,7 +7,8 @@
     "dev": "tsx watch src/server.ts",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/server.js",
-    "test": "vitest run",
+    "test": "dotenv -e .env.test -- npm run test:run",
+    "test:run": "prisma migrate deploy && vitest run",
     "lint": "eslint . --ext .ts",
     "seed": "tsx prisma/seed.ts",
     "prisma:generate": "prisma generate",
@@ -28,10 +29,12 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
+    "@types/connect-pg-simple": "^7.0.3",
     "@types/express": "^4.17.21",
     "@types/express-session": "^1.18.0",
     "@types/node": "^20.16.0",
     "@types/supertest": "^6.0.2",
+    "dotenv-cli": "^7.4.2",
     "supertest": "^7.0.0",
     "typescript": "^5.6.0",
     "vitest": "^2.1.0"

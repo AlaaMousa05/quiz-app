@@ -11,4 +11,10 @@ module.exports = {
   plugins: ["@typescript-eslint"],
   extends: base.extends,
   rules: base.rules,
+  overrides: [
+    {
+      files: ["tests/**/*.ts"],
+      rules: { "max-lines-per-function": "off" },
+    },
+  ],
 };

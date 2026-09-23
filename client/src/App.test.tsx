@@ -3,8 +3,8 @@ import { describe, expect, it } from "vitest";
 import App from "./App";
 
 describe("App scaffold", () => {
-  it("renders", () => {
+  it("redirects an unauthenticated visitor to the login screen", async () => {
     render(<App />);
-    expect(screen.getByText("Quiz App")).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Log in" })).toBeInTheDocument();
   });
 });

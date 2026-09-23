@@ -48,27 +48,27 @@ description: "Task list for Quiz App Core (Clickable MVP)"
 
 ### Tests first
 
-- [ ] T013 [P] Write `shared` i18n key-parity test `shared/src/i18n/i18n.spec.ts` — fails if a key exists in `en.ts` but not `ar.ts` or vice versa (research.md)
-- [ ] T014 [P] Write auth integration tests `server/tests/integration/auth.routes.test.ts` referencing traceability names `auth.spec: student can log in with username + password` and `auth.spec: invalid credentials are rejected`, plus deactivated-user-denied (FR-031a) — Supertest against the real test Postgres
-- [ ] T015 [P] Write role/ownership middleware unit/integration coverage: a STUDENT is refused a TEACHER route, a TEACHER is refused another teacher's quiz (403), per constitution Principle III
+- [X] T013 [P] Write `shared` i18n key-parity test `shared/src/i18n/i18n.spec.ts` — fails if a key exists in `en.ts` but not `ar.ts` or vice versa (research.md)
+- [X] T014 [P] Write auth integration tests `server/tests/integration/auth.routes.test.ts` referencing traceability names `auth.spec: student can log in with username + password` and `auth.spec: invalid credentials are rejected`, plus deactivated-user-denied (FR-031a) — Supertest against the real test Postgres
+- [X] T015 [P] Write role/ownership middleware unit/integration coverage: a STUDENT is refused a TEACHER route, a TEACHER is refused another teacher's quiz (403), per constitution Principle III
 
 ### Implementation
 
-- [ ] T016 [P] Create `shared/src/i18n/en.ts` and `ar.ts` typed so `ar` is `Record<keyof typeof en, string>`; seed with the shell/nav/login keys
-- [ ] T017 [P] Create `shared/src/schemas/auth.schema.ts` (`loginSchema`) per contracts/auth.md
-- [ ] T018 Implement `server/src/middleware/session.middleware.ts` (express-session + connect-pg-simple against the same Postgres)
-- [ ] T019 Implement `server/src/services/auth.service.ts` (bcrypt verify, cost 12; no req/res; deactivated-user check)
-- [ ] T020 Implement `server/src/repositories/user.repository.ts` (find-by-username, used by auth)
-- [ ] T021 Implement `server/src/errors/` typed domain errors (DomainError, NotFound, Forbidden, Conflict, ValidationError, DeadlinePassed) + `index.ts`
-- [ ] T022 Implement `server/src/middleware/errorHandler.middleware.ts` mapping domain errors → HTTP codes + i18n message keys
-- [ ] T023 [P] Implement `server/src/middleware/requireAuth.middleware.ts`, `requireRole.middleware.ts`, `requireOwnership.middleware.ts`
-- [ ] T024 Implement `server/src/controllers/auth.controller.ts` + `routes/auth.routes.ts` for `POST /login`, `POST /logout`, `GET /me` (contracts/auth.md)
-- [ ] T025 [P] Implement `client/src/lib/i18n/I18nProvider.tsx` + `useTranslation.ts`; default language from browser, persisted per device; switches `<html dir/lang>` (FR-034/FR-035)
-- [ ] T026 [P] Implement `client/src/components/ui/LanguageToggle.tsx`
-- [ ] T027 Implement `client/src/features/auth/` (api/, hooks/, components/, pages/) Login screen S1 + `client/src/routes/router.tsx` and `RoleGuard.tsx` shell (guarded empty role landing pages)
-- [ ] T028 Run auth + i18n tests; confirm all green
-- [ ] T029 Quality gate for Phase 2 (includes `/code-review` medium on the auth changes, step 3)
-- [ ] T030 Commit Phase 2: `feat: session auth, role guards, bilingual shell`
+- [X] T016 [P] Create `shared/src/i18n/en.ts` and `ar.ts` typed so `ar` is `Record<keyof typeof en, string>`; seed with the shell/nav/login keys
+- [X] T017 [P] Create `shared/src/schemas/auth.schema.ts` (`loginSchema`) per contracts/auth.md
+- [X] T018 Implement `server/src/middleware/session.middleware.ts` (express-session + connect-pg-simple against the same Postgres)
+- [X] T019 Implement `server/src/services/auth.service.ts` (bcrypt verify, cost 12; no req/res; deactivated-user check)
+- [X] T020 Implement `server/src/repositories/user.repository.ts` (find-by-username, used by auth)
+- [X] T021 Implement `server/src/errors/` typed domain errors (DomainError, NotFound, Forbidden, Conflict, ValidationError, DeadlinePassed) + `index.ts`
+- [X] T022 Implement `server/src/middleware/errorHandler.middleware.ts` mapping domain errors → HTTP codes + i18n message keys
+- [X] T023 [P] Implement `server/src/middleware/requireAuth.middleware.ts`, `requireRole.middleware.ts`, `requireOwnership.middleware.ts`
+- [X] T024 Implement `server/src/controllers/auth.controller.ts` + `routes/auth.routes.ts` for `POST /login`, `POST /logout`, `GET /me` (contracts/auth.md)
+- [X] T025 [P] Implement `client/src/lib/i18n/I18nProvider.tsx` + `useTranslation.ts`; default language from browser, persisted per device; switches `<html dir/lang>` (FR-034/FR-035)
+- [X] T026 [P] Implement `client/src/components/ui/LanguageToggle.tsx`
+- [X] T027 Implement `client/src/features/auth/` (api/, hooks/, components/, pages/) Login screen S1 + `client/src/routes/router.tsx` and `RoleGuard.tsx` shell (guarded empty role landing pages)
+- [X] T028 Run auth + i18n tests; confirm all green
+- [X] T029 Quality gate for Phase 2 (includes `/code-review` medium on the auth changes, step 3)
+- [X] T030 Commit Phase 2: `feat: session auth, role guards, bilingual shell`
 
 ---
 

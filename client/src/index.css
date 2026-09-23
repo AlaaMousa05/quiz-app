@@ -1,7 +1,9 @@
-@import "@fontsource/noto-sans/400.css";
-@import "@fontsource/noto-sans/700.css";
-@import "@fontsource/noto-sans-arabic/400.css";
-@import "@fontsource/noto-sans-arabic/700.css";
+/* Only the Latin and Arabic subsets — the full @fontsource packages also ship
+   Cyrillic/Greek/Vietnamese/Devanagari woff2 files this app never uses. */
+@import "@fontsource/noto-sans/latin-400.css";
+@import "@fontsource/noto-sans/latin-700.css";
+@import "@fontsource/noto-sans-arabic/arabic-400.css";
+@import "@fontsource/noto-sans-arabic/arabic-700.css";
 
 @tailwind base;
 @tailwind components;
