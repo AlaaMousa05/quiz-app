@@ -91,3 +91,18 @@ Running log of AI-assisted work on this project, one entry per phase. See CLAUDE
 
 **My notes:**
 
+
+## Phase: Quality gate + plan revision — 2026-09-23
+
+**What I asked for**: Add a "Quality gate (end of every implementation phase)" section to CLAUDE.md (commit "docs: add quality gate"), then revise `plan.md` and any other plan artifacts to follow CLAUDE.md's "Code structure and quality" and "Quality gate" sections and constitution Principle IX (full folder structure, shared Zod contracts, ESLint+Prettier+lint script, the end-of-phase quality gate, and a re-run Constitution Check including Principle IX). Report exactly what changed versus the first version of the plan; log this phase; commit. The framing was that the plan was generated before those rules existed.
+
+**What you produced**:
+- CLAUDE.md: a new "Quality gate (end of every implementation phase)" section (the 6 ordered steps — lint+tests, `/simplify`, conditional `/code-review` medium + project-end high + `/security-review`, structure re-check, re-run lint+tests, ai-log entry — then the final commit). Committed as "docs: add quality gate".
+- `plan.md`: added the quality gate as an explicit paragraph in the Implementation Phases section (naming which phases — 2's auth part, 3, 4, 6, 7, 8 — trigger the `/code-review` step, and the project-end high-effort review + security review in phase 11); noted it in phase 11's description; and added quality-gate wording to the Constitution Check's Principle IX, Delivery Constraints (the `npm run lint` script), and Workflow & Commit Discipline rows, plus a dated quality-gate re-check note under the Result line. Re-ran the Constitution Check — still PASS.
+
+**What went wrong or needed correction**: The request's framing was partly inaccurate, and I corrected the record rather than silently going along with it. Two of the three things it asked me to "add" were already done and committed before this turn: the "Code structure and quality" section in CLAUDE.md and constitution Principle IX (v1.1.0) were committed earlier as `bb99493`, and `plan.md` was actually generated *after* that commit (`5f9bb94`), so it already contained the full folder structure, `shared/` Zod contracts, ESLint size rules, and a Constitution Check covering Principle IX. I did not duplicate any of that. The one genuine gap was the Quality gate, which did not exist when the plan was written — so the substantive plan change this turn was narrowly the quality-gate references, not a structural rewrite. Likewise, `research.md`/`data-model.md`/`contracts/`/`quickstart.md` already complied with the code-structure rules (research.md already had the ESLint-enforcement section; quickstart §9 already required `npm run lint`), so I left them unchanged rather than inventing edits to match the request's file list — the quality gate is a per-phase process that belongs in plan.md's phases, not embedded in a data model or a validation runbook.
+
+**How it was verified**: Re-read CLAUDE.md to confirm the code-structure section and constitution Principle IX were already present and intact before editing (so I wouldn't duplicate them). After editing `plan.md`, re-read the Constitution Check and Implementation Phases sections to confirm the quality-gate wording is consistent (same phase numbers cited in the phases paragraph and the Workflow row) and that the "still PASS" re-check note honestly states that nothing structural changed, only the quality-gate references were added. No code or tests to run — documentation only.
+
+**My notes:**
+
