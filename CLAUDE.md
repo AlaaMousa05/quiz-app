@@ -12,15 +12,17 @@ React + Vite + TypeScript + Tailwind (client/), Express + TypeScript + Prisma + 
 (Keep this list accurate as scripts are added.)
 
 ## Non-negotiable rules
-- The server is the only authority on time and scoring. Never trust client timestamps or scores.
+- The server is the only authority on time, attempts and scoring. Never trust client timestamps, attempt status or scores.
+- Handle and test bad behaviour: double submits, refreshes mid-attempt, the same quiz open in two tabs, late submits after the quiz window closes, and tampered requests.
 - Never send `is_correct` (or anything that reveals it) to a student before the attempt is submitted.
 - One attempt per student per quiz is enforced by a DB unique constraint, not only app code.
 - Every route checks role AND ownership (student -> own class, teacher -> own quizzes).
 - Validate every request body with Zod.
 - Store times in UTC; display in Asia/Amman.
 - Scores use Decimal, never JS floats.
-- Every user-facing text element that may contain Arabic uses dir="auto".
+- Every user-facing text element that may contain Arabic uses dir="auto"; keep layouts RTL-safe.
 - Mobile-first UI: design at 375px width, tap targets >= 44px.
+- Simplicity: one Postgres DB, one app container unless there's a documented need otherwise. No feature without a reason written in DECISIONS.md.
 
 ## Workflow
 - Write tests before changing scoring, timing, attempt or permission logic.
