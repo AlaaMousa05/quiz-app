@@ -40,7 +40,7 @@ Deletion rule (FR-028): a `Class` may be hard-deleted only if `students.count ==
 | `id` | `String @id @default(cuid())` | |
 | `title` | `String` | |
 | `ownerTeacherId` | `String @relation(User)` | FR-004; the importing teacher, or the teacher chosen by the admin on import (FR-018) |
-| `status` | `enum QuizStatus { DRAFT PUBLISHED }` | FR-004; one-directional DRAFT→PUBLISHED (research.md) |
+| `status` | `enum QuizStatus { DRAFT PUBLISHED }` | FR-004; DRAFT↔PUBLISHED, but unpublish (PUBLISHED→DRAFT) allowed only while no attempts exist (research.md) |
 | `opensAt` / `closesAt` | `DateTime` (UTC) | FR-004, FR-006 |
 | `timeLimitMinutes` | `Int @default(20)` | FR-004 |
 | `negMarkEnabled` | `Boolean` | FR-012, defaults from owner's profile at creation (FR-012a) |
@@ -136,11 +136,11 @@ User (uploader) 1──* ImportBatch
 
 ## State transitions
 
-**Quiz**: `DRAFT → PUBLISHED` (one-directional; research.md). Field mutability: all fields editable while `DRAFT`; once `locked` (≥1 attempt exists), only `opensAt`/`closesAt` remain editable regardless of `DRAFT`/`PUBLISHED` (FR-024) — in practice a quiz only ever becomes locked after it's published and a student has started, but the rule is expressed in terms of attempt existence, not status, to avoid two overlapping "is this editable" checks.
+**Quiz**: `DRAFT → PUBLISHED` (publish) and `PUBLISHED → DRAFT` (unpublish); unpublish is permitted only while the quiz is not `locked` (zero attempts), so once the first attempt exists the quiz can no longer leave `PUBLISHED` (research.md). Field mutability: all fields editable while `DRAFT`; once `locked` (≥1 attempt exists), only `opensAt`/`closesAt` remain editable regardless of `DRAFT`/`PUBLISHED` (FR-024) — the rule is expressed in terms of attempt existence, not status, so the same lock condition governs both "which fields are editable" and "can this be unpublished."
 
 **Attempt**: `IN_PROGRESS → SUBMITTED` (explicit student submit, FR-013) or `IN_PROGRESS → AUTO_FINALIZED` (deadline + grace period elapsed, FR-009). Both are terminal — no further transitions, no re-opening.
 
-**Class**: `ACTIVE → ARCHIVED` (FR-028); archiving does not cascade to students/quizzes (FR-029). No `ARCHIVED → ACTIVE` transition was requested; omitted for the same reason as "no unpublish" in research.md — flag for `DECISIONS.md` "Next week" if needed.
+**Class**: `ACTIVE → ARCHIVED` and `ARCHIVED → ACTIVE` (restore); archiving does not cascade to students/quizzes (FR-029), and restoring simply makes the class assignable again with its roster and history intact.
 
 **User**: `ACTIVE → DEACTIVATED` and back (FR-031a implies a reversible action, since the Admin Users screen — ui.md A4 — shows a "Reactivate" action on a deactivated row).
 

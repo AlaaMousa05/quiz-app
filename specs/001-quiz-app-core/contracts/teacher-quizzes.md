@@ -36,9 +36,17 @@ Errors: `409 ConflictError` (mapped from a domain `QuizLockedError`) if the quiz
 
 **FRs**: FR-004, FR-023. **Screens**: T3.
 
-No body. Sets `status = PUBLISHED`. One-directional (research.md) — no unpublish endpoint.
+No body. Sets `status = PUBLISHED`.
 
 Errors: `422 ValidationError` if the quiz has zero questions (FR-023).
+
+## `POST /api/teacher/quizzes/:quizId/unpublish`
+
+**FRs**: FR-004a. **Screens**: T3.
+
+No body. Sets `status = DRAFT`.
+
+Errors: `409 ConflictError` (mapped from a domain `QuizLockedError`) if the quiz has at least one attempt (FR-004a/FR-024) — a locked quiz stays published; only its dates can change.
 
 ## `GET /api/teacher/quizzes/:quizId/results`
 

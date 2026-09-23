@@ -12,7 +12,7 @@ Schemas in `shared/src/schemas/class.schema.ts`. **Auth**: ADMIN on every endpoi
 
 ## `PATCH /api/admin/classes/:classId`
 
-**FRs**: FR-028, FR-029. **Screens**: A3. Request: `{ name? , status?: "ACTIVE"|"ARCHIVED" }`.
+**FRs**: FR-028, FR-029. **Screens**: A3. Request: `{ name? , status?: "ACTIVE"|"ARCHIVED" }`. Setting `status: "ARCHIVED"` archives the class; setting `status: "ACTIVE"` on an archived class restores it (FR-028/FR-029) — the roster and history are untouched by either transition.
 
 ## `DELETE /api/admin/classes/:classId`
 

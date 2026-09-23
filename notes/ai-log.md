@@ -106,3 +106,22 @@ Running log of AI-assisted work on this project, one entry per phase. See CLAUDE
 
 **My notes:**
 
+
+## Phase: Reverse two deferred judgment calls (unpublish + class restore) — 2026-09-23
+
+**What I asked for**: Reverse the two judgment calls recorded in research.md: (1) allow unpublishing a quiz, but only while it has no attempts — after the first attempt it stays published (dates still editable); (2) allow restoring an archived class to active. Update spec.md, research.md, data-model.md, and the contracts to match; record both in DECISIONS.md with a one-line why; log this phase; commit as "docs: allow unpublish before first attempt and class restore".
+
+**What you produced**:
+- `research.md`: rewrote the "publishing is one-directional" decision into "DRAFT↔PUBLISHED, unpublish gated on zero attempts (reuses the FR-024 lock)", with rationale and both alternatives (the old one-directional rule, and unpublish-even-after-attempts) marked rejected.
+- `data-model.md`: updated the Quiz `status` field note and the Quiz/Class state-transition sections — Quiz now `DRAFT→PUBLISHED` and `PUBLISHED→DRAFT` (only while unlocked); Class now `ACTIVE↔ARCHIVED` (restore keeps roster/history).
+- `spec.md`: added FR-004a (gated unpublish) and extended FR-028/FR-029 (restore); added User Story 2 scenarios 7–8 (unpublish allowed with no attempts, refused after), User Story 5 scenario 3a (restore), an edge case for the refused-unpublish, and updated the Quiz/Class Key Entities.
+- `contracts/`: added `POST /api/teacher/quizzes/:quizId/unpublish` (409 if locked) to teacher-quizzes.md, removed the "one-directional — no unpublish endpoint" note from the publish endpoint, and made the class `PATCH` restore semantics explicit in admin-classes.md.
+- `plan.md`: rewrote the Constitution Check row VIII, which had cited these two as deferred "Next week" candidates, to say they were resolved in favour of allowing them.
+- `DECISIONS.md`: added both as Assumptions with a one-line why each.
+
+**What went wrong or needed correction**: Nothing needed correction — this was a clean reversal of two decisions I had explicitly flagged as revisitable when I first made them, so the "candidate for later" framing paid off exactly as intended. One consistency check that mattered: the two features had been mentioned in four places beyond the obvious spec text (research.md's decision block, data-model's transition section, plan.md's Constitution Check row VIII, and — for unpublish — the teacher-quizzes publish-endpoint note that explicitly said "no unpublish endpoint"), so I grepped for the old wording (`one-directional`, `re-archive`, `unpublish`) across all plan artifacts to make sure none of the now-false "deferred/one-directional" statements were left behind. Confirmed neither was ever added to DECISIONS.md's "Next week" list (they'd only been research.md candidates), so there was nothing to remove there.
+
+**How it was verified**: Grepped every plan artifact for the old terms (`one-directional`, `re-archive to active`, `no unpublish`) after editing — no stale references remain. Re-read the unpublish rule across research.md, data-model.md, spec.md (FR-004a + scenarios + edge case), and the new contract endpoint to confirm the "only while no attempts / stays published after first attempt" condition is stated identically in all four and ties back to the same FR-024 lock rather than introducing a second condition. No code or tests to run — documentation only.
+
+**My notes:**
+

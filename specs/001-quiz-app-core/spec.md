@@ -56,6 +56,8 @@ A teacher creates a quiz for one or more of their classes: a title, a time limit
 4. **Given** a teacher tries to view or edit another teacher's quiz, **When** they attempt to access it, **Then** access is denied.
 5. **Given** a quiz already has at least one attempt (in progress or submitted), **When** the teacher tries to edit its questions, options, time limit, negative-marking setting, or assigned classes, **Then** the edit is rejected; only the open/close dates remain editable at that point.
 6. **Given** a teacher saves a quiz as a draft, **When** they have not yet clicked publish, **Then** the quiz is not visible or startable by any student regardless of its configured dates.
+7. **Given** a published quiz that has no attempts yet, **When** the teacher unpublishes it, **Then** it returns to draft, disappears from students' lists, and its fields become editable again.
+8. **Given** a published quiz that already has at least one attempt, **When** the teacher tries to unpublish it, **Then** the action is refused and the quiz stays published (only its open/close dates remain editable).
 
 ---
 
@@ -110,6 +112,7 @@ The admin (Nour) manages the school's structure directly: creating, renaming, an
 1. **Given** the admin creates a new class, **When** it is saved, **Then** it becomes available for student assignment and quiz targeting immediately.
 2. **Given** a class has students or quizzes associated with it, **When** the admin tries to delete it, **Then** the deletion is refused and archiving is offered instead; an empty class (no students, no quizzes) MAY be deleted outright.
 3. **Given** the admin archives a class, **When** the archive is saved, **Then** no new students or quizzes can be assigned to it, but its existing students, quizzes, and historical attempts are unaffected.
+3a. **Given** an archived class, **When** the admin restores it to active, **Then** it becomes assignable again with its roster and history intact.
 4. **Given** the admin moves a student from one class to another, **When** the move is saved, **Then** the student's past attempts remain attributed to them unchanged, and from that point on the student's quiz list reflects only the new class's quizzes.
 5. **Given** a student has an attempt in progress at the moment they are moved to a new class, **When** that attempt continues, **Then** it is allowed to finish under the rules (quiz, time limit) it started with.
 6. **Given** the admin creates a single student or teacher directly (not via spreadsheet), **When** the account is saved, **Then** it behaves identically to an imported account (username scheme, generated password, printable credentials).
@@ -130,6 +133,7 @@ The admin (Nour) manages the school's structure directly: creating, renaming, an
 - Spreadsheet import file is otherwise malformed (wrong columns, empty file, unsupported format): the whole import MUST fail clearly at the preview stage, before anything is saved, rather than partially importing unpredictable data.
 - A quiz has zero questions: it MUST NOT be publishable/openable to students until at least one question exists.
 - A quiz is left as a draft (never published): it MUST NOT appear to students under any circumstance, even if its dates would otherwise make it open.
+- A teacher tries to unpublish a quiz that already has at least one attempt: MUST be refused; the quiz stays published (consistent with the FR-024 lock — only its dates remain editable).
 - Negative marking would otherwise drive a student's total score below zero: the total MUST be floored at zero for display and reporting.
 - A teacher attempts to edit a quiz's questions, options, time limit, negative-marking setting, or assigned classes after any attempt exists: the edit MUST be rejected; only the open/close dates remain editable at that point.
 - A student not in any of a quiz's assigned classes attempts to access it directly (e.g., a guessed link): access MUST be denied the same as if the quiz did not exist.
@@ -147,6 +151,7 @@ The admin (Nour) manages the school's structure directly: creating, renaming, an
 - **FR-002**: System MUST allow only the admin to create and manage the set of classes (10A, 10B, 11A) and teacher accounts.
 - **FR-003**: Every student account MUST belong to exactly one class.
 - **FR-004**: System MUST let a teacher create a quiz consisting of a title, a time limit (default 20 minutes), an open date/time range, one or more assigned classes, a per-quiz negative-marking setting, and a list of questions. A newly created quiz MUST start as a draft, invisible to students, until the owning teacher explicitly publishes it.
+- **FR-004a**: System MUST let the owning teacher unpublish a published quiz (returning it to draft) only while it has no attempts; once at least one attempt exists the quiz MUST remain published, with only its open/close dates editable (per FR-024).
 - **FR-005**: Each quiz question MUST have exactly four answer options, exactly one designated correct option, and its own point value.
 - **FR-006**: System MUST prevent a student from starting a quiz that is a draft, outside its configured open date/time range, or not assigned to that student's class; such a quiz MUST NOT appear in the student's quiz list.
 - **FR-007**: System MUST prevent a student from starting more than one attempt on the same quiz, enforced so that it cannot be bypassed by retrying, refreshing, or opening multiple tabs.
@@ -175,8 +180,8 @@ The admin (Nour) manages the school's structure directly: creating, renaming, an
 - **FR-025**: System MUST display all dates and times to users in Asia/Amman local time, regardless of the quiz's or student's location, formatted conventionally for the active UI language (English or Arabic).
 - **FR-026**: System MUST show, for each quiz, a results view listing every enrolled student's attempt status and score, the class average score, and the percentage of students who answered each question correctly.
 - **FR-027**: System MUST let a teacher (for quizzes they own) or the admin (for any quiz) export a quiz's results as a CSV file.
-- **FR-028**: Admin MUST be able to create, rename, and archive classes. A class MAY be deleted only while it has no students and no quizzes; otherwise deletion MUST be refused and archiving offered instead.
-- **FR-029**: Archiving a class MUST prevent new students or quizzes from being assigned to it, while leaving its existing students, quizzes, and historical attempts unaffected.
+- **FR-028**: Admin MUST be able to create, rename, archive, and restore (unarchive) classes. A class MAY be deleted only while it has no students and no quizzes; otherwise deletion MUST be refused and archiving offered instead.
+- **FR-029**: Archiving a class MUST prevent new students or quizzes from being assigned to it, while leaving its existing students, quizzes, and historical attempts unaffected. Restoring an archived class MUST make it assignable again with its roster and history intact.
 - **FR-030**: Admin MUST be able to view the list of students in any class and move a student to a different class. A moved student's past attempts MUST remain attributed to them unchanged; from the move onward, the student MUST see only their new class's quizzes. An attempt already in progress at the time of the move MUST be allowed to finish under the rules it started with.
 - **FR-031**: Admin MUST be able to create a single student or teacher account directly, without a spreadsheet, producing an account equivalent in every way to an imported one (username scheme, generated password).
 - **FR-031a**: Admin MUST be able to deactivate a user; a deactivated user MUST NOT be able to log in, but their historical quizzes, attempts, and results MUST remain intact and visible to those otherwise permitted to see them.
@@ -194,8 +199,8 @@ The admin (Nour) manages the school's structure directly: creating, renaming, an
 ### Key Entities
 
 - **User**: A person with a role (admin, teacher, or student), a name, a username, a password (system-generated, admin-resettable), and an active/deactivated status. Students additionally belong to a class and have a student-ID-style username (e.g., `S10A01`); teachers additionally own the quizzes they create and have a default negative-marking preference (enabled/disabled, penalty fraction) applied to new quizzes.
-- **Class**: One of the school's groups (seeded with 10A, 10B, 11A; more can be created by the admin or auto-created by import) that students belong to, with an active/archived status. Cannot be deleted while it has students or quizzes — only archived.
-- **Quiz**: A named, timed assessment owned by one teacher, assigned to one or more classes, with a draft/published status, an open date/time range, a time limit, a negative-marking setting, and an ordered set of questions. Must have at least one question to be opened to students, and must be published (not draft) to be visible to them. Once any attempt exists, every field except its open/close dates is locked.
+- **Class**: One of the school's groups (seeded with 10A, 10B, 11A; more can be created by the admin or auto-created by import) that students belong to, with an active/archived status (archiving is reversible — an archived class can be restored to active). Cannot be deleted while it has students or quizzes — only archived.
+- **Quiz**: A named, timed assessment owned by one teacher, assigned to one or more classes, with a draft/published status, an open date/time range, a time limit, a negative-marking setting, and an ordered set of questions. Must have at least one question to be opened to students, and must be published (not draft) to be visible to them. Can be unpublished back to draft only while it has no attempts. Once any attempt exists, it stays published and every field except its open/close dates is locked.
 - **Question**: Belongs to one quiz; has question text, exactly four options, one correct option, and a point value.
 - **Attempt**: Represents one student's single try at one quiz; tracks start time, computed deadline, submission/finalization time, per-question answers selected (autosaved as chosen), status (in progress / submitted / auto-finalized), and the computed score. Unique per student per quiz.
 - **Import Batch**: Represents one spreadsheet upload (students, teachers, or a quiz's questions), in either XLSX or CSV format; tracks a row-by-row preview, which rows succeeded, which failed and why, and requires explicit confirmation before anything is saved.
