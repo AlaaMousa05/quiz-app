@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useTranslation } from "../../../lib/i18n/useTranslation";
 import { formatDateTime } from "../../../lib/datetime";
+import { AppShell } from "../../../components/ui/AppShell";
 import { CenteredMessage } from "../../../components/ui/CenteredMessage";
 import { queryGateMessage } from "../../../components/ui/queryGateMessage";
 import { Card } from "../../../components/ui/Card";
@@ -14,12 +15,12 @@ export function ResultPage() {
   const { data: result, isLoading, isError } = useAttemptPageData(quizId, useAttemptResult);
 
   const gate = queryGateMessage(t, isLoading, isError, "studentQuiz.result.loadError");
-  if (gate) return gate;
-  if (!result) return <CenteredMessage>{t("studentQuiz.result.loadError")}</CenteredMessage>;
+  if (gate) return <AppShell>{gate}</AppShell>;
+  if (!result) return <AppShell><CenteredMessage>{t("studentQuiz.result.loadError")}</CenteredMessage></AppShell>;
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-lg flex-col gap-4 p-4">
-      <Card className="flex flex-col items-center gap-2 text-center">
+    <AppShell>
+      <Card className="mx-auto flex w-full max-w-lg flex-col items-center gap-2 text-center">
         <p className="text-3xl font-semibold">
           <bdi>
             {result.score} / {result.maxPoints}
@@ -40,6 +41,6 @@ export function ResultPage() {
           {t("studentQuiz.result.backToQuizzes")}
         </LinkButton>
       </Card>
-    </main>
+    </AppShell>
   );
 }

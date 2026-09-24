@@ -2,8 +2,10 @@ import type { ReactNode } from "react";
 
 export function CenteredMessage({ children }: { children: ReactNode }) {
   return (
-    <main className="flex min-h-screen items-center justify-center p-4">
-      <p dir="auto">{children}</p>
-    </main>
+    <div className="flex min-h-[60vh] items-center justify-center p-4">
+      <p className="text-neutral-500" dir="auto">
+        {children}
+      </p>
+    </div>
   );
 }

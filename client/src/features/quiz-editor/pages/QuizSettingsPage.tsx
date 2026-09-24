@@ -1,7 +1,10 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "../../../lib/i18n/useTranslation";
+import { AppShell } from "../../../components/ui/AppShell";
 import { CenteredMessage } from "../../../components/ui/CenteredMessage";
 import { queryGateMessage } from "../../../components/ui/queryGateMessage";
+import { useToast } from "../../../components/ui/Toast";
+import { errorMessage } from "../../../lib/errorMessage";
 import { useTeacherClasses } from "../api/useTeacherClasses";
 import { useTeacherQuiz } from "../api/useTeacherQuiz";
 import { useCreateQuiz, useUpdateQuiz } from "../api/useQuizMutations";
@@ -11,6 +14,7 @@ export function QuizSettingsPage() {
   const { quizId } = useParams<{ quizId?: string }>();
   const isEditing = Boolean(quizId);
   const { t } = useTranslation();
+  const toast = useToast();
   const navigate = useNavigate();
 
   const classesQuery = useTeacherClasses();
@@ -24,33 +28,40 @@ export function QuizSettingsPage() {
     classesQuery.isError || (isEditing && quizQuery.isError),
     "quizEditor.loadError",
   );
-  if (gate) return gate;
-  if (!classesQuery.data) return <CenteredMessage>{t("quizEditor.loadError")}</CenteredMessage>;
+  if (gate) return <AppShell>{gate}</AppShell>;
+  if (!classesQuery.data) return <AppShell><CenteredMessage>{t("quizEditor.loadError")}</CenteredMessage></AppShell>;
 
   const mutation = isEditing ? updateQuiz : createQuiz;
 
   function handleSubmit(values: Parameters<typeof createQuiz.mutate>[0]) {
     if (isEditing) {
-      updateQuiz.mutate(values, { onSuccess: () => navigate(`/teacher/quizzes/${quizId}/questions`) });
+      updateQuiz.mutate(values, {
+        onSuccess: () => {
+          toast.show(t("toast.updated"));
+          navigate(`/teacher/quizzes/${quizId}/questions`);
+        },
+      });
     } else {
-      createQuiz.mutate(values, { onSuccess: (result) => navigate(`/teacher/quizzes/${result.quizId}/questions`) });
+      createQuiz.mutate(values, {
+        onSuccess: (result) => {
+          toast.show(t("toast.created"));
+          navigate(`/teacher/quizzes/${result.quizId}/questions`);
+        },
+      });
     }
   }
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-lg flex-col gap-4 p-4">
-      <h1 className="text-xl font-semibold" dir="auto">
-        {t("quizEditor.settings.title")}
-      </h1>
+    <AppShell title={t("quizEditor.settings.title")}>
       <QuizSettingsForm
         classes={classesQuery.data}
         locked={quizQuery.data?.locked ?? false}
         initialValues={quizQuery.data ?? undefined}
         onSubmit={handleSubmit}
         isSubmitting={mutation.isPending}
-        errorMessage={mutation.isError ? t("quizEditor.settings.saveError") : undefined}
+        errorMessage={mutation.isError ? errorMessage(t, mutation.error, "quizEditor.settings.saveError") : undefined}
         submitLabel={t("quizEditor.settings.next")}
       />
-    </main>
+    </AppShell>
   );
 }

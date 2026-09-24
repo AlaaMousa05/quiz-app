@@ -31,11 +31,11 @@ export function Table<T>({ columns, rows, rowKey }: TableProps<T>) {
           </Card>
         ))}
       </div>
-      <table className="hidden w-full border-collapse text-start sm:table">
+      <table className="hidden w-full table-auto overflow-hidden rounded-lg border-collapse border border-neutral-100 bg-white text-start shadow-[0_1px_2px_rgba(17,19,24,0.06)] sm:table">
         <thead>
-          <tr className="border-b border-neutral-100 text-start text-sm text-neutral-500">
+          <tr className="border-b border-neutral-100 bg-neutral-50 text-start text-sm text-neutral-500">
             {columns.map((col) => (
-              <th key={col.key} className="px-3 py-2 text-start font-medium">
+              <th key={col.key} className="px-3 py-2.5 text-start font-medium">
                 {col.header}
               </th>
             ))}
@@ -43,9 +43,9 @@ export function Table<T>({ columns, rows, rowKey }: TableProps<T>) {
         </thead>
         <tbody>
           {rows.map((row) => (
-            <tr key={rowKey(row)} className="border-b border-neutral-100">
+            <tr key={rowKey(row)} className="border-b border-neutral-100 last:border-b-0 hover:bg-neutral-50">
               {columns.map((col) => (
-                <td key={col.key} className="px-3 py-2 text-sm" dir="auto">
+                <td key={col.key} className="px-3 py-2.5 text-sm" dir="auto">
                   {col.render(row)}
                 </td>
               ))}

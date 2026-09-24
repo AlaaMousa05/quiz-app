@@ -4,6 +4,7 @@ import { useTranslation } from "../../../lib/i18n/useTranslation";
 import { CenteredMessage } from "../../../components/ui/CenteredMessage";
 import { queryGateMessage } from "../../../components/ui/queryGateMessage";
 import { Dialog } from "../../../components/ui/Dialog";
+import { errorMessage } from "../../../lib/errorMessage";
 import { useTakingQuiz } from "../hooks/useTakingQuiz";
 import { QuestionCard } from "../components/QuestionCard";
 import { QuestionGrid } from "../components/QuestionGrid";
@@ -79,7 +80,7 @@ export function TakingQuizPage() {
         questions={attempt.questions}
         answers={quiz.answers}
         isSubmitting={quiz.isSubmitting}
-        errorMessage={quiz.isSubmitError ? t("studentQuiz.confirm.submitError") : undefined}
+        errorMessage={quiz.isSubmitError ? errorMessage(t, quiz.submitError, "studentQuiz.confirm.submitError") : undefined}
         onConfirm={() => void quiz.submit()}
       />
     </div>

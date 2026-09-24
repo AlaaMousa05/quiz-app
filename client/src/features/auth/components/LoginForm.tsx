@@ -44,7 +44,7 @@ export function LoginForm({ onSubmit, isSubmitting, errorMessage }: LoginFormPro
       />
 
       {errorMessage ? (
-        <p role="alert" className="text-sm text-red-600" dir="auto">
+        <p role="alert" className="rounded-md bg-danger-100 p-3 text-sm text-danger-700" dir="auto">
           {errorMessage}
         </p>
       ) : null}

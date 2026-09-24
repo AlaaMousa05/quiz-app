@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "../../../lib/i18n/useTranslation";
+import { AppShell } from "../../../components/ui/AppShell";
 import { CenteredMessage } from "../../../components/ui/CenteredMessage";
 import { queryGateMessage } from "../../../components/ui/queryGateMessage";
 import { Button } from "../../../components/ui/Button";
+import { useToast } from "../../../components/ui/Toast";
+import { errorMessage } from "../../../lib/errorMessage";
 import { useTeacherQuiz } from "../api/useTeacherQuiz";
 import { useAddQuestion, useDeleteQuestion, useEditQuestion, usePublishQuiz, useUnpublishQuiz } from "../api/useQuizMutations";
 import { QuestionListItem } from "../components/QuestionListItem";
@@ -13,6 +16,7 @@ import type { QuestionFormInput, TeacherQuestion } from "../api/types";
 export function QuestionsEditorPage() {
   const { quizId = "" } = useParams<{ quizId: string }>();
   const { t } = useTranslation();
+  const toast = useToast();
   const { data: quiz, isLoading, isError } = useTeacherQuiz(quizId);
   const addQuestion = useAddQuestion(quizId);
   const editQuestion = useEditQuestion(quizId);
@@ -24,8 +28,8 @@ export function QuestionsEditorPage() {
   const [formOpen, setFormOpen] = useState(false);
 
   const gate = queryGateMessage(t, isLoading, isError, "quizEditor.loadError");
-  if (gate) return gate;
-  if (!quiz) return <CenteredMessage>{t("quizEditor.loadError")}</CenteredMessage>;
+  if (gate) return <AppShell>{gate}</AppShell>;
+  if (!quiz) return <AppShell><CenteredMessage>{t("quizEditor.loadError")}</CenteredMessage></AppShell>;
 
   function openAddForm() {
     setEditingQuestion(undefined);
@@ -38,7 +42,10 @@ export function QuestionsEditorPage() {
   }
 
   function handleFormSubmit(input: QuestionFormInput) {
-    const onSuccess = () => setFormOpen(false);
+    const onSuccess = () => {
+      setFormOpen(false);
+      toast.show(t(editingQuestion ? "toast.updated" : "toast.created"));
+    };
     if (editingQuestion) {
       editQuestion.mutate({ questionId: editingQuestion.id, input }, { onSuccess });
     } else {
@@ -46,13 +53,22 @@ export function QuestionsEditorPage() {
     }
   }
 
+  function handleDelete(questionId: string) {
+    deleteQuestion.mutate(questionId, {
+      onSuccess: () => toast.show(t("toast.deleted")),
+      onError: (err) => toast.show(errorMessage(t, err), "error"),
+    });
+  }
+
+  const activeMutation = editingQuestion ? editQuestion : addQuestion;
+
   return (
-    <main className="mx-auto flex min-h-screen max-w-2xl flex-col gap-4 p-4">
+    <AppShell>
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-semibold" dir="auto">
           {t("quizEditor.questions.title", { count: quiz.questions.length })}
         </h1>
-        {!quiz.locked && <Button onClick={openAddForm}>{t("quizEditor.questions.add")}</Button>}
+        {!quiz.locked && <Button variant="primary" onClick={openAddForm}>{t("quizEditor.questions.add")}</Button>}
       </div>
 
       {quiz.locked && (
@@ -74,7 +90,7 @@ export function QuestionsEditorPage() {
               index={i}
               locked={quiz.locked}
               onEdit={() => openEditForm(q)}
-              onDelete={() => deleteQuestion.mutate(q.id)}
+              onDelete={() => handleDelete(q.id)}
             />
           ))}
         </div>
@@ -84,15 +100,16 @@ export function QuestionsEditorPage() {
         <Button
           variant="primary"
           disabled={publishQuiz.isPending || unpublishQuiz.isPending}
-          onClick={() => (quiz.status === "PUBLISHED" ? unpublishQuiz.mutate() : publishQuiz.mutate())}
+          onClick={() => {
+            const action = quiz.status === "PUBLISHED" ? unpublishQuiz : publishQuiz;
+            action.mutate(undefined, {
+              onSuccess: () => toast.show(t("toast.done")),
+              onError: (err) => toast.show(errorMessage(t, err, "quizEditor.questions.publishError"), "error"),
+            });
+          }}
         >
           {t(quiz.status === "PUBLISHED" ? "quizEditor.questions.unpublish" : "quizEditor.questions.publish")}
         </Button>
-      )}
-      {publishQuiz.isError && (
-        <p role="alert" className="text-sm text-danger-700" dir="auto">
-          {t("quizEditor.questions.publishError")}
-        </p>
       )}
 
       <QuestionFormDialog
@@ -101,7 +118,8 @@ export function QuestionsEditorPage() {
         question={editingQuestion}
         onSubmit={handleFormSubmit}
         isSubmitting={addQuestion.isPending || editQuestion.isPending}
+        errorMessage={activeMutation.isError ? errorMessage(t, activeMutation.error) : undefined}
       />
-    </main>
+    </AppShell>
   );
 }

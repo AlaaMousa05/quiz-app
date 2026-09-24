@@ -1,5 +1,5 @@
 import { useTranslation } from "../../../lib/i18n/useTranslation";
-import { RoleHomeShell } from "../../../components/ui/RoleHomeShell";
+import { AppShell } from "../../../components/ui/AppShell";
 import { CenteredMessage } from "../../../components/ui/CenteredMessage";
 import { queryGateMessage } from "../../../components/ui/queryGateMessage";
 import { Card } from "../../../components/ui/Card";
@@ -27,31 +27,26 @@ export function AdminResultsPage() {
   const groups = quizzes ? groupByClass(quizzes) : null;
 
   return (
-    <RoleHomeShell titleKey="app.title">
-      <div className="mx-auto flex w-full max-w-3xl flex-col gap-4">
-        <h2 className="text-2xl font-semibold" dir="auto">
-          {t("admin.allResults")}
-        </h2>
-        {gate}
-        {!gate && groups && groups.size === 0 && <CenteredMessage>{t("results.empty")}</CenteredMessage>}
-        {!gate &&
-          groups &&
-          Array.from(groups.entries()).map(([className, classQuizzes]) => (
-            <div key={className} className="flex flex-col gap-2">
-              <h3 className="font-medium" dir="auto">
-                {className}
-              </h3>
-              {classQuizzes.map((quiz) => (
-                <Card key={quiz.id} className="flex items-center justify-between gap-2">
-                  <p dir="auto">
-                    {quiz.title} ({t("admin.owner", { name: quiz.ownerName })})
-                  </p>
-                  <LinkButton to={`/admin/quizzes/${quiz.id}/results`}>{t("admin.viewResults")}</LinkButton>
-                </Card>
-              ))}
-            </div>
-          ))}
-      </div>
-    </RoleHomeShell>
+    <AppShell title={t("admin.allResults")}>
+      {gate}
+      {!gate && groups && groups.size === 0 && <CenteredMessage>{t("results.empty")}</CenteredMessage>}
+      {!gate &&
+        groups &&
+        Array.from(groups.entries()).map(([className, classQuizzes]) => (
+          <div key={className} className="flex flex-col gap-2">
+            <h2 className="font-medium text-neutral-500" dir="auto">
+              {className}
+            </h2>
+            {classQuizzes.map((quiz) => (
+              <Card key={quiz.id} className="flex items-center justify-between gap-2">
+                <p dir="auto">
+                  {quiz.title} ({t("admin.owner", { name: quiz.ownerName })})
+                </p>
+                <LinkButton to={`/admin/quizzes/${quiz.id}/results`}>{t("admin.viewResults")}</LinkButton>
+              </Card>
+            ))}
+          </div>
+        ))}
+    </AppShell>
   );
 }

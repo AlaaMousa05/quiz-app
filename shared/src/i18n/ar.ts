@@ -160,6 +160,8 @@ export const ar: Record<TranslationKey, string> = {
   "results.loadError": "تعذر تحميل النتائج.",
   "results.empty": "لا يوجد طلاب مسجلون في صف هذا الاختبار بعد.",
 
+  "admin.dashboard.shortcuts": "أدر صفوف المدرسة والمستخدمين والاختبارات من هنا.",
+
   "admin.allQuizzes": "جميع الاختبارات",
   "admin.allResults": "جميع النتائج",
   "admin.viewResults": "← عرض",
@@ -223,4 +225,9 @@ export const ar: Record<TranslationKey, string> = {
   "admin.import.resultHeading": "تم استيراد {count} حساب",
   "admin.import.print": "🖨 طباعة",
   "admin.import.done": "تم",
+
+  "toast.created": "تم الإنشاء بنجاح.",
+  "toast.updated": "تم الحفظ بنجاح.",
+  "toast.deleted": "تم الحذف بنجاح.",
+  "toast.done": "تم.",
 };

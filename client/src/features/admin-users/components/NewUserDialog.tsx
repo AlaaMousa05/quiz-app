@@ -42,10 +42,12 @@ export function NewUserDialog({
       <form onSubmit={handleSubmit} className="flex flex-col gap-4" dir="auto">
         <Field label={t("admin.users.nameLabel")} value={name} onChange={(e) => setName(e.target.value)} required autoFocus />
 
-        <label className="flex flex-col gap-1">
-          <span dir="auto">{t("admin.users.roleLabel")}</span>
+        <label className="flex flex-col gap-1.5">
+          <span className="text-sm font-medium text-neutral-700" dir="auto">
+            {t("admin.users.roleLabel")}
+          </span>
           <select
-            className="min-h-11 rounded-md border border-neutral-300 px-3 py-2"
+            className="min-h-11 rounded-md border border-neutral-300 bg-white px-3 py-2 outline-none focus:border-accent-600 focus:ring-2 focus:ring-accent-100"
             value={role}
             onChange={(e) => setRole(e.target.value as NewUserFormValues["role"])}
           >
@@ -55,10 +57,12 @@ export function NewUserDialog({
         </label>
 
         {role === "STUDENT" && (
-          <label className="flex flex-col gap-1">
-            <span dir="auto">{t("admin.users.classLabel")}</span>
+          <label className="flex flex-col gap-1.5">
+            <span className="text-sm font-medium text-neutral-700" dir="auto">
+              {t("admin.users.classLabel")}
+            </span>
             <select
-              className="min-h-11 rounded-md border border-neutral-300 px-3 py-2"
+              className="min-h-11 rounded-md border border-neutral-300 bg-white px-3 py-2 outline-none focus:border-accent-600 focus:ring-2 focus:ring-accent-100"
               value={classId}
               onChange={(e) => setClassId(e.target.value)}
               required

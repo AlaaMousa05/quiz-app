@@ -2,9 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "../../../lib/i18n/useTranslation";
+import { AppShell } from "../../../components/ui/AppShell";
 import { CenteredMessage } from "../../../components/ui/CenteredMessage";
 import { Button } from "../../../components/ui/Button";
 import { LinkButton } from "../../../components/ui/LinkButton";
+import { useToast } from "../../../components/ui/Toast";
+import { errorMessage } from "../../../lib/errorMessage";
 import { useImportPreview } from "../../../lib/useImportPreview";
 import { previewImportFile, confirmImportFile, type ImportTarget } from "../api/importApi";
 import { adminUsersKey } from "../api/queryKeys";
@@ -14,6 +17,7 @@ import type { ImportConfirmResult } from "../api/types";
 
 export function ImportUsersPage() {
   const { t } = useTranslation();
+  const toast = useToast();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [target, setTarget] = useState<ImportTarget>("students");
@@ -28,7 +32,9 @@ export function ImportUsersPage() {
     onSuccess: (r) => {
       void queryClient.invalidateQueries({ queryKey: adminUsersKey() });
       setResult(r);
+      toast.show(t("toast.created"));
     },
+    onError: (err) => toast.show(errorMessage(t, err), "error"),
   });
 
   function handleTargetChange(next: ImportTarget) {
@@ -43,7 +49,7 @@ export function ImportUsersPage() {
 
   if (result) {
     return (
-      <main className="mx-auto flex min-h-screen max-w-lg flex-col gap-4 p-4">
+      <AppShell>
         <h1 className="text-xl font-semibold" dir="auto">
           {t("admin.import.resultHeading", { count: result.created.length })}
         </h1>
@@ -54,15 +60,15 @@ export function ImportUsersPage() {
             {t("admin.import.done")}
           </Button>
         </div>
-      </main>
+      </AppShell>
     );
   }
 
   const errorCount = importPreview.preview ? importPreview.preview.summary.total - importPreview.preview.summary.willImport : 0;
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-lg flex-col gap-4 p-4">
-      <LinkButton to="/admin/users">{t("common.back")}</LinkButton>
+    <AppShell>
+      <LinkButton to="/admin/users">← {t("common.back")}</LinkButton>
       <h1 className="text-xl font-semibold" dir="auto">
         {target === "students" ? t("admin.import.studentsTitle") : t("admin.import.teachersTitle")}
       </h1>
@@ -76,7 +82,7 @@ export function ImportUsersPage() {
         </Button>
       </div>
 
-      <label className="flex min-h-24 cursor-pointer flex-col items-center justify-center rounded-md border-2 border-dashed border-neutral-300 p-4 text-center text-sm text-neutral-500">
+      <label className="flex min-h-24 cursor-pointer flex-col items-center justify-center rounded-md border-2 border-dashed border-neutral-300 bg-white p-4 text-center text-sm text-neutral-500 transition-colors hover:border-accent-600 hover:bg-accent-100/30">
         {t("admin.import.dropzone")}
         <input
           key={target}
@@ -89,7 +95,7 @@ export function ImportUsersPage() {
 
       {importPreview.status === "loading" && <CenteredMessage>{t("common.loading")}</CenteredMessage>}
       {importPreview.status === "error" && (
-        <p role="alert" className="text-sm text-danger-700" dir="auto">
+        <p role="alert" className="rounded-md bg-danger-100 p-3 text-sm text-danger-700" dir="auto">
           {importPreview.errorMessage ?? t("admin.import.error")}
         </p>
       )}
@@ -108,13 +114,19 @@ export function ImportUsersPage() {
             })}
           </p>
 
+          {confirmImport.isError && (
+            <p role="alert" className="rounded-md bg-danger-100 p-3 text-sm text-danger-700" dir="auto">
+              {errorMessage(t, confirmImport.error)}
+            </p>
+          )}
+
           {importPreview.preview.summary.willImport > 0 && (
             <Button variant="primary" disabled={confirmImport.isPending} onClick={() => confirmImport.mutate()}>
-              {t("admin.import.confirm", { count: importPreview.preview.summary.willImport })}
+              {confirmImport.isPending ? t("common.loading") : t("admin.import.confirm", { count: importPreview.preview.summary.willImport })}
             </Button>
           )}
         </>
       )}
-    </main>
+    </AppShell>
   );
 }

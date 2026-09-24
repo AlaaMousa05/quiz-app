@@ -158,6 +158,8 @@ export const en = {
   "results.loadError": "Couldn't load results.",
   "results.empty": "No students enrolled in this quiz's class yet.",
 
+  "admin.dashboard.shortcuts": "Manage the school's classes, users, and quizzes from here.",
+
   "admin.allQuizzes": "All Quizzes",
   "admin.allResults": "All Results",
   "admin.viewResults": "View →",
@@ -221,6 +223,11 @@ export const en = {
   "admin.import.resultHeading": "{count} accounts imported",
   "admin.import.print": "🖨 Print",
   "admin.import.done": "Done",
+
+  "toast.created": "Created successfully.",
+  "toast.updated": "Saved successfully.",
+  "toast.deleted": "Deleted successfully.",
+  "toast.done": "Done.",
 } as const;
 
 export type TranslationKey = keyof typeof en;

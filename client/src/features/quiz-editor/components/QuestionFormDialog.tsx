@@ -18,12 +18,14 @@ export function QuestionFormDialog({
   question,
   onSubmit,
   isSubmitting,
+  errorMessage,
 }: {
   open: boolean;
   onClose: () => void;
   question?: TeacherQuestion;
   onSubmit: (input: QuestionFormInput) => void;
   isSubmitting: boolean;
+  errorMessage?: string;
 }) {
   const { t } = useTranslation();
   const [text, setText] = useState(question?.text ?? "");
@@ -68,11 +70,18 @@ export function QuestionFormDialog({
             />
           </div>
         ))}
+
+        {errorMessage && (
+          <p role="alert" className="rounded-md bg-danger-100 p-3 text-sm text-danger-700" dir="auto">
+            {errorMessage}
+          </p>
+        )}
+
         <div className="flex gap-2">
           <Button type="submit" variant="primary" disabled={isSubmitting}>
-            {t("quizEditor.questionForm.save")}
+            {isSubmitting ? t("common.loading") : t("quizEditor.questionForm.save")}
           </Button>
-          <Button type="button" onClick={onClose}>
+          <Button type="button" onClick={onClose} disabled={isSubmitting}>
             {t("quizEditor.questionForm.cancel")}
           </Button>
         </div>

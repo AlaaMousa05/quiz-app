@@ -60,5 +60,6 @@ export function useTakingQuiz(quizId: string) {
     submit,
     isSubmitting: submitAttempt.isPending,
     isSubmitError: submitAttempt.isError,
+    submitError: submitAttempt.error,
   };
 }

@@ -1,5 +1,6 @@
 import { useTranslation } from "../../../lib/i18n/useTranslation";
 import { Card } from "../../../components/ui/Card";
+import { Badge } from "../../../components/ui/Badge";
 import { LinkButton } from "../../../components/ui/LinkButton";
 import type { TeacherQuizListItem } from "../api/types";
 
@@ -12,9 +13,9 @@ export function QuizEditorCard({ quiz }: { quiz: TeacherQuizListItem }) {
         <h3 className="text-lg font-medium" dir="auto">
           {quiz.title}
         </h3>
-        <span className="whitespace-nowrap text-sm text-neutral-500">
+        <Badge tone={quiz.status === "PUBLISHED" ? "success" : "neutral"}>
           {t(quiz.status === "PUBLISHED" ? "quizEditor.status.published" : "quizEditor.status.draft")}
-        </span>
+        </Badge>
       </div>
       <p className="text-sm text-neutral-500" dir="auto">
         {quiz.classNames.join(", ")} ·{" "}

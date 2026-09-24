@@ -50,12 +50,12 @@ export function SubmitConfirmDialog({
           {t("studentQuiz.confirm.cannotUndo")}
         </p>
         {errorMessage && (
-          <p role="alert" className="text-sm text-danger-700" dir="auto">
+          <p role="alert" className="rounded-md bg-danger-100 p-3 text-sm text-danger-700" dir="auto">
             {errorMessage}
           </p>
         )}
         <Button variant="primary" disabled={isSubmitting} onClick={onConfirm}>
-          {t("studentQuiz.confirm.submit")}
+          {isSubmitting ? t("common.loading") : t("studentQuiz.confirm.submit")}
         </Button>
         <Button variant="secondary" disabled={isSubmitting} onClick={onClose}>
           {t("studentQuiz.confirm.goBack")}

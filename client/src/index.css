@@ -8,3 +8,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-neutral-50 text-neutral-900;
+    font-family:
+      "Noto Sans",
+      "Noto Sans Arabic",
+      ui-sans-serif,
+      system-ui,
+      sans-serif;
+  }
+}
