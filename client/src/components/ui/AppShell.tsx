@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useTranslation } from "../../lib/i18n/useTranslation";
 import { useSession } from "../../features/auth/hooks/useSession";
 import { useLogout } from "../../features/auth/api/useLogout";
@@ -14,9 +14,18 @@ import { Button } from "./Button";
 // `children` (most editor/detail screens) omit it to avoid a duplicate.
 export function AppShell({ title, children }: { title?: string; children?: ReactNode }) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { role } = useSession();
   const logout = useLogout();
   const links = role ? NAV_LINKS[role] : [];
+
+  function handleLogout() {
+    logout.mutate(undefined, {
+      // Redirect regardless: the session cookie is already cleared server-side,
+      // so even a failed response means the user is effectively logged out.
+      onSettled: () => navigate("/login", { replace: true }),
+    });
+  }
 
   return (
     <div className="min-h-screen bg-neutral-50">
@@ -27,7 +36,7 @@ export function AppShell({ title, children }: { title?: string; children?: React
           </span>
           <div className="flex items-center gap-2">
             <LanguageToggle />
-            <Button onClick={() => logout.mutate()} disabled={logout.isPending}>
+            <Button onClick={handleLogout} disabled={logout.isPending}>
               {t("nav.logout")}
             </Button>
           </div>
