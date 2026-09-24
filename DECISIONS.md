@@ -75,6 +75,15 @@ In build order, highest first:
 - CSV encodings other than UTF-8, most notably Windows-1256. *Why: correctly detecting and transcoding legacy encodings adds real complexity for a first version; rejecting with a clear message ("Save as CSV UTF-8 or upload XLSX") is simple, honest, and unblocks the admin in under a minute via Excel's "CSV UTF-8" save option.*
 - Syncing a user's language preference across devices or browsers for the same account. *Why: the toggle is device-local (e.g., browser storage) for this version; account-level sync would need a place to store per-user settings that doesn't exist yet.*
 
+## What's unfinished (time crunch before submission)
+
+- **Sample dataset trimmed**: seed data is 24 students (8 per class across 10A/10B/11A) instead of the ~60 originally planned, 4 teachers, 1 admin, one Arabic quiz and one English quiz (one question each, not a full bank) — inline in `server/prisma/seed.ts`, not separate `sample-data/` spreadsheet files. *Why: time ran out before submission; a smaller-but-real dataset that demonstrates every role/feature was prioritized over a larger one that didn't fit the remaining time.*
+- **Phase 10's full break-it pass was skipped.** No dedicated curl-based attack pass against attempt/scoring/timing integrity, permission boundaries, or malformed-import handling was run beyond what Phases 1-9's own test suites and ad hoc manual smoke tests already cover (108 server + 15 client automated tests, plus manual `curl` checks against the real running container for each phase's new endpoints). *Why: time ran out; this is the most significant gap versus the original plan and should be the first thing done next.*
+- **No `/code-review` or `/security-review` pass was run**, at any effort level, on any phase from Phase 6 onward (originally planned as a project-end high-effort pass in Phase 10). *Why: explicit time-based instruction partway through the session — see notes/ai-log.md.* This means the admin/import/credential-creation code in Phase 8 in particular has had only manual review and test coverage, not a structured adversarial pass.
+- **Admin screens (A1-A5) are functionally complete but unpolished**: no dashboard summary counts on A1 (ui.md describes one; not built — see below), minimal empty/loading states, no automated UI/browser test (verified only via `tsc`/`vite build`/lint and `curl` against the real endpoints, consistent with every earlier phase this session).
+- **A1 Dashboard has no summary-counts endpoint.** ui.md describes `GET /api/admin/dashboard/summary` (class/student/teacher/quiz counts); this was never in any contracts file or tasks.md task, so A1 stayed link-only (Classes/Users/All Quizzes/All Results) rather than adding a new, undocumented endpoint under time pressure.
+- **`/simplify` was not run for Phases 6-9** (an explicit standing instruction for this session, not an oversight) — some duplication that a `/simplify` pass would likely catch (e.g. `NewUserDialog`'s two near-identical `<select>` blocks) was left as-is.
+
 ## Next week
 
 - Self-service password reset (with email or another out-of-band channel) and a forced password change on first login.

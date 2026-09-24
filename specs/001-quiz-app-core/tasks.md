@@ -203,12 +203,12 @@ description: "Task list for Quiz App Core (Clickable MVP)"
 
 **Goal**: Realistic fixtures matching spec.md's Assumptions, auto-loaded on empty-DB start.
 
-- [ ] T091 [P] Create `server/prisma/sample-data/students.xlsx` (3 classes 10A/10B/11A, ~20 each, many Arabic names), `teachers.csv` (4 teachers), `quiz-week4.xlsx` (15 questions incl. an Arabic quiz)
-- [ ] T092 Implement `server/prisma/seed.ts` reading the sample data, runnable via `npm run seed` and auto-run on empty DB; referencing `seed.spec: seed data contains 10A/10B/11A with ~20 students each`, `seed.spec: seed data contains 4 teacher accounts`, `seed.spec: seed quiz has 15 questions`, `seed.spec: seed script produces realistic sample data matching the brief`
-- [ ] T093 [P] Write `server/tests/integration/seed.test.ts` asserting the counts above
-- [ ] T094 Run seed test + verify `docker compose up --build` on a clean volume logs in as each seeded role (quickstart.md §2)
-- [ ] T095 Quality gate for Phase 9 (no `/code-review` step)
-- [ ] T096 Commit Phase 9: `feat: seed script and sample-data spreadsheets`
+- [X] ~~T091~~ SKIPPED (time crunch) — no separate `sample-data/` spreadsheet files; fixtures are inline in `seed.ts` instead. See DECISIONS.md "What's unfinished."
+- [X] T092 Implement `server/prisma/seed.ts` — inline fixtures (24 students across 10A/10B/11A instead of ~60, 4 teachers, 1 admin, one Arabic + one English quiz), runnable via `npm run seed` and auto-run on empty DB. Trimmed from the original ~60-student/15-question plan per the time-crunch instruction.
+- [X] ~~T093~~ SKIPPED (time crunch) — no dedicated `seed.test.ts`; verified manually instead (see T094).
+- [X] T094 Verified manually: rebuilt `docker compose` image against a wiped DB, confirmed the seed log line, and logged in via `curl` as `demo-admin`, `t-amal` (teacher), and `S10A01` (student) — all three succeeded and the student's `GET /api/quizzes` returned the seeded quiz.
+- [X] T095 Quality gate for Phase 9 — lint + tests only, per the time-crunch instruction (no `/code-review`, no `/simplify`)
+- [X] T096 Commit Phase 9: `feat: minimal seed data (trimmed for time)`
 
 ---
 
