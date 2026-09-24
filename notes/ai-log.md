@@ -291,3 +291,29 @@ I manually tested Phase 2 end to end in the browser after the docker compose reb
 
 **My notes:**
 
+
+## Phase 10 (reduced): lint + test verification only — 2026-09-24
+
+**What I asked for**: Per the time-crunch instruction, skip Phase 10's originally-planned adversarial break-it pass entirely. Instead, run `npm run lint` and `npm run test` once across all workspaces and fix only crashes/errors that block basic usage. No `/code-review` or `/security-review`, at any effort level, under any circumstances, for the rest of the project.
+
+**What you produced**: No code changes. Ran `npm run lint` (root, all three workspaces): 0 errors (2 warnings in `shared`, 70 in `server`, 27 in `client` — all pre-existing accepted patterns: commented non-null assertions, cohesive functions/components over the 40-line soft limit). Ran `npm run test` (root, all three workspaces): 3/3 shared, 108/108 server, 15/15 client — 126/126 total, all green. No crashes or blocking errors found, so nothing needed fixing.
+
+**What went wrong or needed correction**: Nothing — this was a verification-only phase with no findings to act on. Note for the record: this replaces, not supplements, the originally-planned dedicated adversarial test-writing pass (double-submit races, forged scores, permission bypasses) — those scenarios are exercised only incidentally, by whatever the existing Phase 4/6/7 suites already happen to cover, not by new tests purpose-built to attack them. This gap is recorded in `DECISIONS.md` and `AI_USAGE.md`.
+
+**How it was verified**: The lint/test run itself is the verification for this phase; no further checks were run (no `/code-review`/`/security-review`, per the hard-rule instruction). No commit for this phase since no files changed — the resulting doc updates are folded into the Phase 11 commit.
+
+**My notes:**
+
+
+## Phase 11: Final docs (time-crunched) — 2026-09-24
+
+**What I asked for**: Finalize `README.md` (accurate run/seed instructions, real demo logins verified to work), update `DECISIONS.md` with an honest "What's unfinished" list naming every skipped item, and write `AI_USAGE.md` from `notes/ai-log.md` — honest about the time crunch and what got cut. Commit when done, then stop and report a full summary, final test count, every unchecked `tasks.md` item with a reason, and any unresolved "WAITING FOR YOU" items.
+
+**What you produced**: `README.md` — added a top-of-file "Status" callout pointing at what's unfinished, corrected a stale line claiming `/teacher`/`/admin` were still placeholders (they've been real screens since Phases 6–8), and confirmed the "Demo logins" section (added in Phase 9) against a live `curl` test of all three roles rather than just trusting the seed script's intent. `DECISIONS.md` — added a "What's unfinished (time crunch before submission)" section (added in Phase 9, referenced again here) naming: the trimmed seed dataset, the skipped Phase 10 break-it pass, the skipped `/code-review`/`/security-review` passes for Phases 6–11, the never-built A1 dashboard-summary endpoint, and the un-run `/simplify` passes for Phases 6–9. `AI_USAGE.md` (new) — written from `notes/ai-log.md`: how the project was built, the split between user decisions and AI execution, a list of every real bug found this project with the phase and process that caught it (session fixation, login timing side-channel, the secure-cookie-over-HTTP bug, the missing logout cookie-clear, the missing error boundary, the review-endpoint contract gap, the review-endpoint 409-instead-of-403 leak, the Phase 6 router-level-middleware bug, and the Phase 6 Decimal-as-string response bug), and an explicit "what was not done, and why" section matching DECISIONS.md's list. `specs/001-quiz-app-core/tasks.md` — every remaining unchecked task through T106 marked done or explicitly marked SKIPPED with a one-line reason, so the task list itself is an honest record rather than silently abandoned.
+
+**What went wrong or needed correction**: Nothing from you this phase — a direct continuation of the time-crunch instruction. One thing I did not do, flagged rather than silently skipped: T103 asked to reconcile `DECISIONS.md` **and** `specs/001-quiz-app-core/traceability.md` against what was actually built; I updated DECISIONS.md but did not re-walk traceability.md's full FR-by-FR table against the final codebase, since that's a large cross-referencing task and time did not allow it this phase — recorded as a partial completion on T103 rather than checking it off as if it were fully done.
+
+**How it was verified**: Final full-workspace run of `npm run lint` (0 errors, all three workspaces) and `npm run test` (126/126 passing: 3 shared + 108 server + 15 client) after all doc changes, to confirm nothing was broken by this phase (which touched no application code). Manually re-verified the README's demo logins one more time via `curl` against the running `docker compose` container immediately before writing this entry, rather than trusting the Phase 9 verification to still be accurate. No `/code-review`/`/security-review` run, per the hard-rule instruction covering the rest of the project.
+
+**My notes:**
+

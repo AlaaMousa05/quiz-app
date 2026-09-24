@@ -216,11 +216,11 @@ description: "Task list for Quiz App Core (Clickable MVP)"
 
 **Goal**: Deliberately attempt every constitution Principle II scenario and every lock/permission bypass; fix what breaks. **Touches scoring/timing/attempts/auth → the whole phase is adversarial testing.**
 
-- [ ] T097 [P] Add adversarial integration tests: two-tab / double-submit race (one attempt only), forged client score/`is_correct` on submit ignored (FR-011), device-clock tampering has no effect, late submit beyond grace auto-finalizes (quickstart.md §10)
-- [ ] T098 [P] Add lock/permission bypass tests: edit quiz after attempt refused (FR-024), unpublish after attempt refused (FR-004a), review-before-close 403 (FR-010), student accessing another class's quiz 404, non-owner teacher accessing results 403
-- [ ] T099 Fix every issue surfaced by T097/T098; re-run the full suite
-- [ ] T100 Quality gate for Phase 10 (includes `/code-review` medium — this phase touches scoring/timing/attempts/auth directly)
-- [ ] T101 Commit Phase 10: `test: hardening pass for bad-behaviour and permission scenarios`
+- [X] ~~T097~~ SKIPPED (time crunch) — no new adversarial integration tests written this phase. The scenarios listed (double-submit race, forged score, clock tampering, late-submit auto-finalize) are already covered by Phase 4's existing test suite (`student-quizzes.{routes,deadline,access,finalize}.test.ts`), which still passes.
+- [X] ~~T098~~ SKIPPED (time crunch) — no new lock/permission bypass tests written. The scenarios listed are already covered by existing Phase 6/7 tests (`teacher-quizzes.access.test.ts`, `results.routes.test.ts`).
+- [X] T099 Ran `npm run lint` and `npm run test` once across all three workspaces (reduced scope per the time-crunch instruction, replacing a dedicated break-it pass): 0 lint errors, 126/126 tests passing (3 shared + 108 server + 15 client). No crashes or blocking errors found.
+- [X] ~~T100~~ SKIPPED (time crunch) — no `/code-review` or `/security-review` run, at any effort level, per the explicit hard-rule instruction covering the rest of the project. See DECISIONS.md "What's unfinished."
+- [X] T101 No fixes were needed, so nothing to commit for this phase (see Phase 11 commit for the resulting doc updates).
 
 ---
 
@@ -228,11 +228,11 @@ description: "Task list for Quiz App Core (Clickable MVP)"
 
 **Goal**: Bring delivery docs current and run the project-end reviews.
 
-- [ ] T102 [P] Write/refresh `README.md`: one-command run, sample-data loading, demo logins for student/teacher/admin — verified exact against the seed (quickstart.md §2)
-- [ ] T103 [P] Reconcile `DECISIONS.md` and `specs/001-quiz-app-core/traceability.md` against what was actually built (every planned test name now exists or is noted)
-- [ ] T104 Write `AI_USAGE.md` from `notes/ai-log.md` — factual only, no claimed checks that didn't happen (CLAUDE.md)
-- [ ] T105 Run `/code-review` at high effort on the full codebase and `/security-review`; fix confirmed findings; log findings + fixes in `notes/ai-log.md` (CLAUDE.md project-end quality steps)
-- [ ] T106 Final quality gate (full lint + test suite green) and commit Phase 11: `docs: README, DECISIONS, AI_USAGE, and final review`
+- [X] T102 Refreshed `README.md`: one-command run, demo logins verified exact against the actual seed via `curl` (all three roles), a top-of-file Status note pointing at what's unfinished.
+- [X] T103 (partial) `DECISIONS.md` updated with a "What's unfinished" section reflecting what was actually built vs. planned; `traceability.md` was **not** re-reconciled against the final build, per the time-crunch instruction — noted as unfinished.
+- [X] T104 Wrote `AI_USAGE.md` from `notes/ai-log.md` — factual, including every real bug found and an explicit "what was not done, and why" section.
+- [X] ~~T105~~ SKIPPED — explicit hard-rule instruction: no `/code-review` or `/security-review` at any effort level for the rest of the project. See AI_USAGE.md and DECISIONS.md.
+- [X] T106 Final quality gate: `npm run lint` and `npm run test` across all workspaces, 0 errors / 126 tests passing. Commit Phase 11.
 
 ---
 

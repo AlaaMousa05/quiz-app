@@ -2,6 +2,8 @@
 
 A clickable MVP quiz platform for Nour's tutoring centre. See `docs/brief.md` for the client brief and `specs/001-quiz-app-core/` for the spec, plan, and tasks.
 
+**Status**: all 11 planned phases are built and demoable end to end (student quiz-taking, teacher quiz editor + import, results, admin classes/users/import, seed data). The final two phases were cut short by a time crunch before submission — see `DECISIONS.md`'s "What's unfinished" section and `AI_USAGE.md` for exactly what was and wasn't done (notably: no dedicated break-it/adversarial test pass and no `/code-review`/`/security-review` pass beyond the automated test suite and manual smoke-testing already described below).
+
 ## Stack
 
 React + Vite + TypeScript + Tailwind (`client/`), Express + TypeScript + Prisma + PostgreSQL + Zod (`server/`), shared Zod contracts (`shared/`), Vitest + Supertest, Docker Compose.
@@ -64,7 +66,7 @@ docker run -d --name quizapp-test-db -e POSTGRES_USER=quizapp -e POSTGRES_PASSWO
 
 ## Auth + i18n (Phase 2)
 
-Session-based login (`POST /api/auth/login`, cookie-based, `httpOnly`) exists for all three roles (ADMIN/TEACHER/STUDENT); role-guarded landing pages exist for each (`STUDENT` lands on `/quizzes` as of Phase 5 — see below; `/teacher` and `/admin` are still placeholders). The UI is bilingual (English/Arabic, RTL) — toggle the language from the button on the login screen or any role home screen; the choice persists per device (`localStorage`) and the browser's language is used as the default on first visit.
+Session-based login (`POST /api/auth/login`, cookie-based, `httpOnly`) exists for all three roles (ADMIN/TEACHER/STUDENT); each role lands on its own real home screen (`/quizzes` for STUDENT, `/teacher` for TEACHER, `/admin` for ADMIN — see the phase sections below for what's on each). The UI is bilingual (English/Arabic, RTL) — toggle the language from the button on the login screen or any role home screen; the choice persists per device (`localStorage`) and the browser's language is used as the default on first visit.
 
 ## Student quiz-taking API (Phase 4)
 
