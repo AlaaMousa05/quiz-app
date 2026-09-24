@@ -64,6 +64,10 @@ function reviewQuestion(question: AttemptWithQuiz["quiz"]["questions"][number], 
     id: question.id,
     text: question.text,
     points: question.points.toNumber(),
+    // Client needs option text (not just ids) to render "Your answer: B. 3"
+    // — order is preserved (orderIndex, already applied by the repository's
+    // include) so the client can derive the A/B/C/D letter from position.
+    options: question.options.map((o) => ({ id: o.id, text: o.text })),
     selectedOptionId,
     correctOptionId: correctOption.id,
     pointsAwarded,

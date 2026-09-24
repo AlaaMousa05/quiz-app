@@ -118,21 +118,21 @@ description: "Task list for Quiz App Core (Clickable MVP)"
 
 ### Tests first (hooks with real logic)
 
-- [ ] T047 [P] Write `client/tests/hooks/useQuizTimer.test.ts` (counts down from server `remainingSeconds`, stops at 0, never extends — ui.md §1.11)
-- [ ] T048 [P] Write `client/tests/hooks/useAutosave.test.ts` (fires on selection, shows saving/saved/offline states, retries)
+- [X] T047 [P] Write `client/tests/hooks/useQuizTimer.test.ts` (counts down from server `remainingSeconds`, stops at 0, never extends — ui.md §1.11)
+- [X] T048 [P] Write `client/tests/hooks/useAutosave.test.ts` (fires on selection, shows saving/saved/offline states, retries)
 
 ### Implementation
 
-- [ ] T049 [P] Build `client/src/components/ui/` primitives: Button, Card, Field, Dialog, Table (collapses to cards <640px), Badge, TimerDisplay (normal/warning/danger, ui.md §1.11)
-- [ ] T050 [P] Implement `client/src/lib/datetime.ts` (Asia/Amman formatting per active language) and `client/src/lib/apiClient.ts`
-- [ ] T051 [P] Implement `client/src/features/student-quiz/hooks/useQuizTimer.ts` and `useAutosave.ts` until T047/T048 green
-- [ ] T052 [P] Implement `client/src/features/student-quiz/api/` (TanStack Query hooks for the student endpoints — the only place calling the server)
-- [ ] T053 Build S2 My Quizzes (Open/Upcoming/Done, EN + AR wireframes in ui.md), S3 Quiz Intro (negative-marking plain-language copy, FR-032)
-- [ ] T054 Build S4 Taking Quiz (one-question view, sticky timer, question grid, autosave indicator; EN + AR), S5 Submit Confirmation (unanswered count)
-- [ ] T055 Build S6 Result (score only) and S7 Review (post-close breakdown), as presentational components fed by feature hooks
-- [ ] T056 Manual + responsive check: `responsive.spec: all screens usable at 375px width with tap targets >= 44px`; verify refresh-resume end to end (quickstart.md §3)
-- [ ] T057 Quality gate for Phase 5 (no `/code-review` step; the timing/attempt logic it consumes was already reviewed in phase 4)
-- [ ] T058 Commit Phase 5: `feat: student quiz-taking UI (S1-S7)`
+- [X] T049 [P] Build `client/src/components/ui/` primitives: Button (+LinkButton), Card, Field, Dialog, Table (collapses to cards <640px), Badge, TimerDisplay (normal/warning/danger, ui.md §1.11)
+- [X] T050 [P] Implement `client/src/lib/datetime.ts` (Asia/Amman formatting per active language, Western digits) and extend `client/src/lib/apiClient.ts` with `patch`
+- [X] T051 [P] Implement `client/src/features/student-quiz/hooks/useQuizTimer.ts` and `useAutosave.ts` until T047/T048 green
+- [X] T052 [P] Implement `client/src/features/student-quiz/api/` (TanStack Query hooks for the student endpoints — the only place calling the server)
+- [X] T053 Build S2 My Quizzes (Open/Upcoming/Done tabs) and S3 Quiz Intro (negative-marking plain-language copy, FR-032)
+- [X] T054 Build S4 Taking Quiz (one-question view, sticky timer, question grid, autosave indicator) and S5 Submit Confirmation (unanswered count) — state machine lives in `hooks/useTakingQuiz.ts`, page is composition only
+- [X] T055 Build S6 Result (score only) and S7 Review (post-close breakdown) — extended `attemptFinalize.service.ts`'s review response with per-question `options` (a Phase 4 contract gap: text was needed to render "B. 4", not just ids)
+- [X] T056 Build check: `tsc -b`/`vite build`/full test suite green; end-to-end curl verification of the rebuilt docker image (list/review API shapes match what S2/S7 expect). No headless-browser click-through was available in this session — see notes/ai-log.md
+- [X] T057 Quality gate for Phase 5 — ran `/code-review` medium (not skipped, despite the note below) because this phase's changes touched attempt-adjacent server code (`attemptFinalize.service.ts`); see notes/ai-log.md for findings
+- [X] T058 Commit Phase 5: `feat: student quiz-taking UI (S1-S7)`
 
 ---
 

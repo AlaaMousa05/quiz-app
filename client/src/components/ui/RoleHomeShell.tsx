@@ -1,10 +1,11 @@
+import type { ReactNode } from "react";
 import type { TranslationKey } from "shared";
 import { useTranslation } from "../../lib/i18n/useTranslation";
 import { useLogout } from "../../features/auth/api/useLogout";
 import { LanguageToggle } from "./LanguageToggle";
 import { Button } from "./Button";
 
-export function RoleHomeShell({ titleKey }: { titleKey: TranslationKey }) {
+export function RoleHomeShell({ titleKey, children }: { titleKey: TranslationKey; children?: ReactNode }) {
   const { t } = useTranslation();
   const logout = useLogout();
 
@@ -19,6 +20,7 @@ export function RoleHomeShell({ titleKey }: { titleKey: TranslationKey }) {
           <Button onClick={() => logout.mutate()}>{t("nav.logout")}</Button>
         </div>
       </div>
+      {children}
     </main>
   );
 }

@@ -17,7 +17,12 @@ function detectInitialLanguage(): Language {
 export interface I18nContextValue {
   lang: Language;
   setLang: (lang: Language) => void;
-  t: (key: TranslationKey) => string;
+  t: (key: TranslationKey, params?: Record<string, string | number>) => string;
+}
+
+function interpolate(template: string, params?: Record<string, string | number>): string {
+  if (!params) return template;
+  return Object.entries(params).reduce((text, [name, value]) => text.replaceAll(`{${name}}`, String(value)), template);
 }
 
 export const I18nContext = createContext<I18nContextValue | undefined>(undefined);
@@ -37,7 +42,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
         localStorage.setItem(STORAGE_KEY, next);
         setLangState(next);
       },
-      t: (key) => dictionaries[lang][key],
+      t: (key, params) => interpolate(dictionaries[lang][key], params),
     }),
     [lang],
   );

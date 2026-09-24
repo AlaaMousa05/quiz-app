@@ -64,6 +64,6 @@ Response `200`: `{ score, maxPoints, submittedAt, quizClosesAt }`. No per-questi
 
 **FRs**: FR-010 (post-close reveal). **Auth**: STUDENT (own attempt). **Screens**: S7.
 
-Response `200`: `{ score, maxPoints, questions: [{ id, text, points, selectedOptionId, correctOptionId, pointsAwarded }] }`.
+Response `200`: `{ score, maxPoints, questions: [{ id, text, points, options: [{ id, text }], selectedOptionId, correctOptionId, pointsAwarded }] }` — `options` is in display order (A/B/C/D), so the client can render "Your answer: B. 3" rather than a bare id.
 
 Errors: `403 ForbiddenError` if `clock.now() < quiz.closesAt` — enforced server-side regardless of what the client's clock or URL guessing attempts (FR-010, constitution Principle I).

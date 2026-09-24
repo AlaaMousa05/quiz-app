@@ -1,7 +1,7 @@
 import type { Role, TranslationKey } from "shared";
 
 export const ROLE_HOME_PATH: Record<Role, string> = {
-  STUDENT: "/student",
+  STUDENT: "/quizzes",
   TEACHER: "/teacher",
   ADMIN: "/admin",
 };

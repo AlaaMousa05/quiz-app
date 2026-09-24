@@ -52,7 +52,7 @@ docker run -d --name quizapp-test-db -e POSTGRES_USER=quizapp -e POSTGRES_PASSWO
 
 ## Auth + i18n (Phase 2)
 
-Session-based login (`POST /api/auth/login`, cookie-based, `httpOnly`) exists for all three roles (ADMIN/TEACHER/STUDENT); role-guarded landing pages exist for each at `/student`, `/teacher`, `/admin`. The UI is bilingual (English/Arabic, RTL) — toggle the language from the button on the login screen or any role home screen; the choice persists per device (`localStorage`) and the browser's language is used as the default on first visit.
+Session-based login (`POST /api/auth/login`, cookie-based, `httpOnly`) exists for all three roles (ADMIN/TEACHER/STUDENT); role-guarded landing pages exist for each (`STUDENT` lands on `/quizzes` as of Phase 5 — see below; `/teacher` and `/admin` are still placeholders). The UI is bilingual (English/Arabic, RTL) — toggle the language from the button on the login screen or any role home screen; the choice persists per device (`localStorage`) and the browser's language is used as the default on first visit.
 
 ## Student quiz-taking API (Phase 4)
 
@@ -68,3 +68,15 @@ Server-authoritative attempt lifecycle for STUDENT accounts, mounted under `/api
 - `GET /api/attempts/:attemptId/review` — per-question breakdown; 403 until the quiz has closed *and* this attempt can no longer be submitted.
 
 No client is wired to these yet (client UI lands in Phase 5) — exercise them with `curl`/Postman or the integration tests under `server/tests/integration/student-quizzes.*.test.ts`.
+
+## Student quiz-taking UI (Phase 5)
+
+The screens above are now wired to real browser routes for STUDENT accounts:
+
+- `/quizzes` — S2 My Quizzes (Open/Upcoming/Done tabs).
+- `/quizzes/:quizId` — S3 Quiz Intro (Start or Continue an existing in-progress attempt).
+- `/quizzes/:quizId/attempt` — S4 Taking Quiz (sticky timer, one-question view, jump grid, autosave) and S5's submit-confirmation dialog. The attempt id isn't part of the URL (matching the quiz-scoped route in ui.md); it's carried via router state right after Start, or resolved from the quiz intro's `attemptId` field on a refresh/direct link.
+- `/quizzes/:quizId/result` — S6 Result (score only, pre-close).
+- `/quizzes/:quizId/review` — S7 Review (per-question breakdown, post-close only).
+
+Timer state, autosave (with offline/retry), and the "never extend the countdown" rule (FR-008) are unit-tested in `client/tests/hooks/`. No headless-browser click-through was run this session (no browser-automation tool was available) — verified instead via `tsc`/`vite build`, the full test suite, and `curl` against the rebuilt `docker compose` image confirming the API response shapes each screen expects (see `notes/ai-log.md`).
