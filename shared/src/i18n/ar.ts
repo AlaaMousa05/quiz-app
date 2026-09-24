@@ -147,4 +147,22 @@ export const ar: Record<TranslationKey, string> = {
   "quizEditor.import.confirm": "استيراد {count} سؤال ←",
   "quizEditor.import.error": "تعذر تحليل هذا الملف.",
   "quizEditor.import.settingsHeading": "إعدادات الاختبار للأسئلة المستوردة",
+
+  "results.title": "النتائج",
+  "results.classAverage": "متوسط الصف: {average} / {maxPoints}",
+  "results.export": "تصدير ⇩",
+  "results.perQuestion": "نسبة الإجابة الصحيحة لكل سؤال",
+  "results.status.notStarted": "لم يبدأ",
+  "results.status.inProgress": "قيد التنفيذ",
+  "results.status.submitted": "تم التسليم",
+  "results.status.autoFinalized": "تم التسليم",
+  "results.score": "{score} / {maxPoints}",
+  "results.loadError": "تعذر تحميل النتائج.",
+  "results.empty": "لا يوجد طلاب مسجلون في صف هذا الاختبار بعد.",
+
+  "admin.allQuizzes": "جميع الاختبارات",
+  "admin.allResults": "جميع النتائج",
+  "admin.viewResults": "← عرض",
+  "admin.owner": "{name}",
+  "admin.loadError": "تعذر تحميل الاختبارات.",
 };

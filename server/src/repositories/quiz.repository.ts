@@ -149,6 +149,33 @@ export function updateQuestion(questionId: string, data: QuestionData) {
   });
 }
 
+// Same shape as listQuizzesForTeacher, unfiltered by owner, plus the owner's
+// name (A6 shows it; a teacher's own list doesn't need to) — contracts/admin-scope.md.
+export function listAllQuizzesForAdmin() {
+  return prisma.quiz.findMany({
+    include: {
+      classes: { include: { class: { include: { _count: { select: { students: true } } } } } },
+      _count: { select: { attempts: true } },
+      ownerTeacher: { select: { name: true } },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+}
+
+export function getQuizForResults(quizId: string) {
+  return prisma.quiz.findUnique({
+    where: { id: quizId },
+    include: {
+      ownerTeacher: { select: { name: true } },
+      questions: questionsWithOptionsInclude,
+      classes: { include: { class: { include: { students: true } } } },
+      attempts: { include: { answers: true } },
+    },
+  });
+}
+
+export type QuizForResults = NonNullable<Awaited<ReturnType<typeof getQuizForResults>>>;
+
 export function deleteQuestion(questionId: string) {
   return prisma.$transaction(async (tx) => {
     await tx.option.deleteMany({ where: { questionId } });

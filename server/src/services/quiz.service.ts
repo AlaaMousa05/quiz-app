@@ -4,6 +4,7 @@ import {
   createQuizForTeacher,
   findQuizForTeacher,
   listQuizzesForTeacher,
+  listAllQuizzesForAdmin,
   isQuizLocked,
   updateQuiz,
   setQuizStatus,
@@ -51,6 +52,19 @@ export async function listForTeacher(teacherId: string) {
     classNames: q.classes.map((qc) => qc.class.name),
     attemptCount: q._count.attempts,
     enrolledCount: q.classes.reduce((sum, qc) => sum + qc.class._count.students, 0),
+  }));
+}
+
+export async function listForAdmin() {
+  const quizzes = await listAllQuizzesForAdmin();
+  return quizzes.map((q) => ({
+    id: q.id,
+    title: q.title,
+    status: q.status,
+    classNames: q.classes.map((qc) => qc.class.name),
+    attemptCount: q._count.attempts,
+    enrolledCount: q.classes.reduce((sum, qc) => sum + qc.class._count.students, 0),
+    ownerName: q.ownerTeacher.name,
   }));
 }
 

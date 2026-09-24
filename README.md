@@ -94,3 +94,10 @@ Server, mounted under `/api/teacher` (own = the logged-in teacher; non-owner req
 Client routes for TEACHER accounts: `/teacher` (T1 My Quizzes), `/teacher/quizzes/new` and `/teacher/quizzes/:quizId/settings` (T2), `/teacher/quizzes/:quizId/questions` (T3, publish/unpublish), `/teacher/quizzes/import` (T4).
 
 Building this phase surfaced and fixed a real pre-existing bug: `student-quizzes.routes.ts`'s router-level `requireRole("STUDENT")` was intercepting every request under the shared `/api` mount prefix — including the new `/api/teacher/*` and `/api/imports/*` routes — before Express ever tried to match them elsewhere. Fixed by moving the guard to per-route middleware. See `notes/ai-log.md` for details.
+
+## Results + CSV export (Phase 7)
+
+- `GET /api/teacher/quizzes/:quizId/results` and `.../export.csv` — class average, per-question % correct, and each enrolled student's status (`NOT_STARTED`/`IN_PROGRESS`/`SUBMITTED`/`AUTO_FINALIZED`) and score. An expired-but-unread attempt is lazily finalized here too, so results are never stale even if the student never re-opens it.
+- `GET /api/admin/quizzes`, `GET /api/admin/quizzes/:quizId/results` and `.../export.csv` — identical shapes, unfiltered by owner (ADMIN role only) — the exact same `quizResults.service.ts` as the teacher routes, per FR-031c's "same screens, different guard."
+
+Client: `/teacher/quizzes/:quizId/results` (T5), `/admin/quizzes` (A6), `/admin/results` (A7, grouped by class) — all three render the same `QuizResultsPage` component.

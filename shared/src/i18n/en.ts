@@ -145,6 +145,24 @@ export const en = {
   "quizEditor.import.confirm": "Import {count} Questions →",
   "quizEditor.import.error": "Couldn't parse this file.",
   "quizEditor.import.settingsHeading": "Quiz settings for the imported questions",
+
+  "results.title": "Results",
+  "results.classAverage": "Class average: {average} / {maxPoints}",
+  "results.export": "Export ⇩",
+  "results.perQuestion": "Per-question % correct",
+  "results.status.notStarted": "Not started",
+  "results.status.inProgress": "In progress",
+  "results.status.submitted": "Submitted",
+  "results.status.autoFinalized": "Submitted",
+  "results.score": "{score} / {maxPoints}",
+  "results.loadError": "Couldn't load results.",
+  "results.empty": "No students enrolled in this quiz's class yet.",
+
+  "admin.allQuizzes": "All Quizzes",
+  "admin.allResults": "All Results",
+  "admin.viewResults": "View →",
+  "admin.owner": "{name}",
+  "admin.loadError": "Couldn't load quizzes.",
 } as const;
 
 export type TranslationKey = keyof typeof en;

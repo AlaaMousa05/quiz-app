@@ -22,8 +22,11 @@ export function QuizEditorCard({ quiz }: { quiz: TeacherQuizListItem }) {
           ? t("quizEditor.attempted", { attempted: quiz.attemptCount, enrolled: quiz.enrolledCount })
           : t("quizEditor.notPublishedYet")}
       </p>
-      <div className="flex justify-end">
+      <div className="flex justify-end gap-2">
         <LinkButton to={`/teacher/quizzes/${quiz.id}/settings`}>{t("quizEditor.edit")}</LinkButton>
+        {quiz.status === "PUBLISHED" && (
+          <LinkButton to={`/teacher/quizzes/${quiz.id}/results`}>{t("results.title")}</LinkButton>
+        )}
       </div>
     </Card>
   );

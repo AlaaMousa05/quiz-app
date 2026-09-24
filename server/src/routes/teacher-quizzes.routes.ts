@@ -1,5 +1,6 @@
 import { Router } from "express";
 import * as controller from "../controllers/teacher-quizzes.controller.js";
+import * as resultsController from "../controllers/results.controller.js";
 import { requireAuth } from "../middleware/requireAuth.middleware.js";
 import { requireRole } from "../middleware/requireRole.middleware.js";
 
@@ -16,3 +17,5 @@ teacherQuizzesRouter.patch("/quizzes/:quizId/questions/:questionId", controller.
 teacherQuizzesRouter.delete("/quizzes/:quizId/questions/:questionId", controller.deleteQuestion);
 teacherQuizzesRouter.post("/quizzes/:quizId/publish", controller.publish);
 teacherQuizzesRouter.post("/quizzes/:quizId/unpublish", controller.unpublish);
+teacherQuizzesRouter.get("/quizzes/:quizId/results", resultsController.teacherResults);
+teacherQuizzesRouter.get("/quizzes/:quizId/results/export.csv", resultsController.teacherResultsCsv);

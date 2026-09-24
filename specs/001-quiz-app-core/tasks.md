@@ -163,14 +163,14 @@ description: "Task list for Quiz App Core (Clickable MVP)"
 
 **Goal**: T5 Quiz Results (per-student status/score, class average, per-question % correct, CSV) plus admin-unfiltered reuse (A6/A7).
 
-- [ ] T070 [P] Write `server/tests/integration/results.routes.test.ts` referencing `results.spec: teacher sees results for own quiz`, `results.spec: admin sees results for any quiz`, `results.spec: CSV export matches on-screen data`, plus non-owner-denied (Principle III)
-- [ ] T071 Implement results read in `server/src/services/quiz.service.ts` (`getResults(quizId)` — aggregates status/score/class-average/per-question %) and CSV serialization
-- [ ] T072 Implement teacher results routes + `admin-scope` routes reusing the same service (contracts/teacher-quizzes.md, contracts/admin-scope.md) — one service, two guards (Principle IX / FR-031c)
-- [ ] T073 [P] Implement `client/src/features/results/` (api/, hooks/, components/, pages/) — one Quiz Results screen used by T5, A6, A7
-- [ ] T074 Build T5 Quiz Results with CSV export button; A6 All Quizzes and A7 All Results as admin browsing indexes into the same screen
-- [ ] T075 Run results tests; confirm green
-- [ ] T076 Quality gate for Phase 7 (no `/code-review` step required — no scoring/timing/attempt/auth/import logic; reuses reviewed scoring)
-- [ ] T077 Commit Phase 7: `feat: quiz results, class averages, CSV export`
+- [X] T070 [P] Write `server/tests/integration/results.routes.test.ts` referencing `results.spec: teacher sees results for own quiz`, `results.spec: admin sees results for any quiz`, `results.spec: CSV export matches on-screen data`, plus non-owner-denied (Principle III)
+- [X] T071 Implement results read in `server/src/services/quizResults.service.ts` (`getResults(quizId)` — aggregates status/score/class-average/per-question %; also lazily finalizes any expired-but-unread attempt so results are never stale) and CSV serialization — a sibling file to `quiz.service.ts` rather than added there, to stay under the file-size guideline
+- [X] T072 Implement teacher results routes + `admin-scope` routes (new `admin.routes.ts`/`admin-quizzes.controller.ts`) reusing the same `quizResults.service.ts` (contracts/teacher-quizzes.md, contracts/admin-scope.md) — one service, two guards (Principle IX / FR-031c)
+- [X] T073 [P] Implement `client/src/features/results/` (api/, components/, pages/) — one `QuizResultsPage` (scope prop) used by T5, A6, A7
+- [X] T074 Build T5 Quiz Results with CSV export link; A6 All Quizzes and A7 All Results (grouped by class) as admin browsing indexes into the same screen
+- [X] T075 Run results tests; confirm green — 93 server tests, 15 client tests
+- [X] T076 Quality gate for Phase 7 — per this session's instruction, lint + tests + a structure check only (no `/code-review`, consistent with the task's own note that this phase doesn't touch scoring/timing/attempt/auth/import logic directly)
+- [X] T077 Commit Phase 7: `feat: quiz results, class averages, CSV export`
 
 ---
 

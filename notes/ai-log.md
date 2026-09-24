@@ -249,3 +249,16 @@ I manually tested Phase 2 end to end in the browser after the docker compose reb
 
 **My notes:**
 
+
+## Phase 7: Results + CSV export (T070-T077) — 2026-09-24
+
+**What I asked for**: Implement T5 Quiz Results (per-student status/score, class average, per-question % correct, CSV export) plus A6/A7 admin-unfiltered reuse, test-first, with this session's lighter quality gate (lint + tests + structure check only) and continue autonomously.
+
+**What you produced**: `server/src/repositories/quiz.repository.ts` gained `getQuizForResults` (quiz + roster + questions + attempts+answers in one query) and `listAllQuizzesForAdmin`. New `server/src/services/quizResults.service.ts` (kept separate from `quiz.service.ts`, which was already at 163 lines) — `getResults(quizId)` computes class average, per-question % correct, and per-student status/score from the roster and attempts, and `getResultsForTeacher` adds the ownership check; also lazily finalizes any attempt whose deadline+grace has passed but was never individually read (reusing `attempt.service.ts`'s `resolveAttemptOnRead`/`persistScoreIfStillInProgress`), so a teacher checking results right after a quiz closes doesn't see stale `IN_PROGRESS` rows for students who never re-opened their attempt. `toResultsCsv()` for the CSV export. New `results.controller.ts` (shared by both routers) and `admin-quizzes.controller.ts` + `admin.routes.ts` (`requireRole("ADMIN")`) — exactly the "one service, two guards" shape contracts/admin-scope.md specifies. Client: `features/results/` (`QuizResultsPage` taking a `scope: "teacher"|"admin"` prop, reused verbatim for T5/A6-linked/A7-linked routes; `AdminQuizzesPage`/`AdminResultsPage` as thin browsing indexes into it, per FR-031c's "one screen, not a duplicate admin view"). `AdminHomePage` gained links to both (still otherwise a placeholder — the real A1 dashboard is Phase 8 scope).
+
+**What went wrong or needed correction**: Nothing — ran autonomously, no scope-changing decision arose, and all 4 new server tests (results.spec × 3 + non-owner-denied) and both new lint/build passes were green on the first attempt. Manually verified the full read path (teacher results, admin results, CSV) against the rebuilt `docker compose` image with `curl` as an extra check beyond the automated suite.
+
+**How it was verified**: Full server suite 93 tests / 15 files green (was 89 at the end of Phase 6; +4 results tests). Client 15 tests / 4 files green, `tsc -b`/`vite build` clean. Lint: 0 errors across all three workspaces. Structure check: largest new file 184 lines (`quiz.repository.ts`, soft limit 200), controllers call only services, only `repositories/*.ts` import `@prisma/client`. `/simplify` and `/code-review` not run this phase, per this session's instruction (deferred to the single Phase 10 pass).
+
+**My notes:**
+
