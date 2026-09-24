@@ -6,6 +6,8 @@ import { sessionMiddleware } from "./middleware/session.middleware.js";
 import { errorHandlerMiddleware } from "./middleware/errorHandler.middleware.js";
 import { authRouter } from "./routes/auth.routes.js";
 import { studentQuizzesRouter } from "./routes/student-quizzes.routes.js";
+import { teacherQuizzesRouter } from "./routes/teacher-quizzes.routes.js";
+import { importsRouter } from "./routes/imports.routes.js";
 import { NotFoundError } from "./errors/index.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -21,6 +23,8 @@ export function createApp(): Express {
   });
   app.use("/api/auth", authRouter);
   app.use("/api", studentQuizzesRouter);
+  app.use("/api/teacher", teacherQuizzesRouter);
+  app.use("/api/imports", importsRouter);
   app.use("/api", (_req, _res, next) => next(new NotFoundError("Not found.")));
 
   const clientDist = path.resolve(__dirname, "../../client/dist");

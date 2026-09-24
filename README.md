@@ -80,3 +80,17 @@ The screens above are now wired to real browser routes for STUDENT accounts:
 - `/quizzes/:quizId/review` — S7 Review (per-question breakdown, post-close only).
 
 Timer state, autosave (with offline/retry), and the "never extend the countdown" rule (FR-008) are unit-tested in `client/tests/hooks/`. No headless-browser click-through was run this session (no browser-automation tool was available) — verified instead via `tsc`/`vite build`, the full test suite, and `curl` against the rebuilt `docker compose` image confirming the API response shapes each screen expects (see `notes/ai-log.md`).
+
+## Teacher quiz editor + import (Phase 6)
+
+Server, mounted under `/api/teacher` (own = the logged-in teacher; non-owner requests read as 403, no existence leak) and `/api/imports`:
+
+- `GET /api/teacher/classes` — active classes, for the class picker.
+- `GET/POST /api/teacher/quizzes`, `GET/PATCH /api/teacher/quizzes/:quizId` — settings; once a quiz has an attempt, `PATCH` refuses every field except `opensAt`/`closesAt` (409, FR-024).
+- `POST/PATCH/DELETE /api/teacher/quizzes/:quizId/questions[/:questionId]` — exactly 4 options, exactly 1 correct, positive points (400 otherwise); refused once the quiz is locked.
+- `POST /api/teacher/quizzes/:quizId/publish` (400 with zero questions) / `.../unpublish` (409 once locked, per FR-004a).
+- `POST /api/imports/quiz/preview` and `.../confirm` — `multipart/form-data`, one `.xlsx`/`.csv` (UTF-8) file with fixed columns `Question, Points, OptionA, OptionB, OptionC, OptionD, Correct`; preview never persists, confirm re-parses the re-uploaded file and creates the quiz as a draft.
+
+Client routes for TEACHER accounts: `/teacher` (T1 My Quizzes), `/teacher/quizzes/new` and `/teacher/quizzes/:quizId/settings` (T2), `/teacher/quizzes/:quizId/questions` (T3, publish/unpublish), `/teacher/quizzes/import` (T4).
+
+Building this phase surfaced and fixed a real pre-existing bug: `student-quizzes.routes.ts`'s router-level `requireRole("STUDENT")` was intercepting every request under the shared `/api` mount prefix — including the new `/api/teacher/*` and `/api/imports/*` routes — before Express ever tried to match them elsewhere. Fixed by moving the guard to per-route middleware. See `notes/ai-log.md` for details.

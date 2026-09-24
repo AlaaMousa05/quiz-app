@@ -142,20 +142,20 @@ description: "Task list for Quiz App Core (Clickable MVP)"
 
 ### Tests first
 
-- [ ] T059 [P] Write `server/tests/unit/import.service.test.ts` for quiz import parsing referencing `import.spec: valid rows create accounts/quiz content` (quiz variant) and `import.spec: preview shows per-row errors before saving`, plus the UTF-8/XLSX-only encoding rejection ("Save as CSV UTF-8 or upload XLSX")
-- [ ] T060 [P] Write `server/tests/integration/teacher-quizzes.routes.test.ts` referencing `quiz-builder.spec: teacher can create a quiz with questions, options, and points`, `quiz-builder.spec: question requires exactly 4 options, 1 correct answer, and a point value`, `quiz-builder.spec: time limit defaults to 20 minutes if unset`, `access.spec: quiz hidden until published`, plus the FR-024 lock (edit refused after an attempt) and FR-004a unpublish (allowed with 0 attempts, 409 after)
+- [X] T059 [P] Write `server/tests/unit/import.service.test.ts` for quiz import parsing referencing `import.spec: valid rows create accounts/quiz content` (quiz variant) and `import.spec: preview shows per-row errors before saving`, plus the UTF-8/XLSX-only encoding rejection ("Save as CSV UTF-8 or upload XLSX")
+- [X] T060 [P] Write `server/tests/integration/teacher-quizzes.routes.test.ts` (split into `.routes.test.ts` + `.access.test.ts` to stay under the file-size guideline) referencing `quiz-builder.spec: teacher can create a quiz with questions, options, and points`, `quiz-builder.spec: question requires exactly 4 options, 1 correct answer, and a point value`, `quiz-builder.spec: time limit defaults to 20 minutes if unset`, `access.spec: quiz hidden until published`, plus the FR-024 lock (edit refused after an attempt) and FR-004a unpublish (allowed with 0 attempts, 409 after)
 
 ### Implementation
 
-- [ ] T061 [P] Create `shared/src/schemas/import.schema.ts` (preview/confirm shapes, encoding rule) per contracts/imports.md
-- [ ] T062 Implement `server/src/services/import.service.ts` (strict UTF-8 decode + BOM strip, exceljs/csv-parse row parsing, per-row validation, in-memory preview) and `repositories/importBatch.repository.ts`
-- [ ] T063 Create `shared/src/schemas/quiz.schema.ts` (`quizSettingsSchema`: non-empty `title`, `closesAt > opensAt`, positive-int `timeLimitMinutes`, non-empty `classIds`, `negMarkPenalty` in `[0,1]` when `negMarkEnabled`) and `shared/src/schemas/question.schema.ts` (`questionSchema`: exactly 4 `options`, exactly 1 `isCorrect: true`, `points > 0`) per contracts/teacher-quizzes.md — merged from T032, since this is their first real caller. Then implement `server/src/services/quiz.service.ts` (create/update with FR-024 lock, publish, unpublish-if-unlocked FR-004a, exactly-4-options/1-correct validation) and `repositories/quiz.repository.ts` write paths
-- [ ] T064 Implement `server/src/controllers/teacher-quizzes.controller.ts` + `imports.controller.ts` and their routes (contracts/teacher-quizzes.md, contracts/imports.md quiz flow) with owner-ownership guards
-- [ ] T065 [P] Implement `client/src/features/quiz-editor/` api/ + hooks/ (`useImportPreview.ts`) — write `client/tests/hooks/useImportPreview.test.ts` first
-- [ ] T066 Build T1 My Quizzes, T2 Create/Edit Settings (locked-field mode after attempts), T3 Questions Editor (publish/unpublish), T4 Import Quiz (preview + per-row errors)
-- [ ] T067 Run import + teacher tests; confirm green
-- [ ] T068 Quality gate for Phase 6 (includes `/code-review` medium on imports, step 3)
-- [ ] T069 Commit Phase 6: `feat: teacher quiz editor and quiz import`
+- [X] T061 [P] Create `shared/src/schemas/import.schema.ts` (preview/confirm shapes, encoding rule) per contracts/imports.md — scoped to the quiz-import variant only (student/teacher import lands in Phase 8)
+- [X] T062 Implement `server/src/services/import.service.ts` (strict UTF-8 decode + BOM strip, exceljs/csv-parse row parsing, per-row validation, in-memory preview) and `repositories/importBatch.repository.ts`
+- [X] T063 Create `shared/src/schemas/quiz.schema.ts` (`quizSettingsSchema`) and `shared/src/schemas/question.schema.ts` (`questionSchema`) per contracts/teacher-quizzes.md. Then implement `server/src/services/quiz.service.ts` (create/update with FR-024 lock, publish, unpublish-if-unlocked FR-004a) and `repositories/quiz.repository.ts` write paths
+- [X] T064 Implement `server/src/controllers/teacher-quizzes.controller.ts` + `imports.controller.ts` and their routes (contracts/teacher-quizzes.md, contracts/imports.md quiz flow) with owner-ownership guards. Also fixed a pre-existing routing bug found in the process: `student-quizzes.routes.ts`'s router-level `requireRole("STUDENT")` was intercepting every request under the shared `/api` mount, including these new teacher/import routes — moved the guard to per-route middleware (see notes/ai-log.md)
+- [X] T065 [P] Implement `client/src/features/quiz-editor/` api/ + hooks/ (`useImportPreview.ts`) — `client/tests/hooks/useImportPreview.test.ts` written and confirmed red first
+- [X] T066 Build T1 My Quizzes, T2 Create/Edit Settings (locked-field mode after attempts), T3 Questions Editor (publish/unpublish), T4 Import Quiz (preview + per-row errors)
+- [X] T067 Run import + teacher tests; confirm green — 89 server tests, 15 client tests
+- [X] T068 Quality gate for Phase 6 — per this session's instruction, scoped to lint + tests + a structure check only (no `/simplify`/`/code-review`; those resume as the consolidated Phase 10 pass)
+- [X] T069 Commit Phase 6: `feat: teacher quiz editor and quiz import`
 
 ---
 
