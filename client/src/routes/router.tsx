@@ -15,6 +15,10 @@ import { QuizResultsPage } from "../features/results/pages/QuizResultsPage";
 import { AdminQuizzesPage } from "../features/results/pages/AdminQuizzesPage";
 import { AdminResultsPage } from "../features/results/pages/AdminResultsPage";
 import { AdminHomePage } from "../features/admin-classes/pages/AdminHomePage";
+import { ClassesPage } from "../features/admin-classes/pages/ClassesPage";
+import { ClassDetailPage } from "../features/admin-classes/pages/ClassDetailPage";
+import { UsersPage } from "../features/admin-users/pages/UsersPage";
+import { ImportUsersPage } from "../features/admin-users/pages/ImportUsersPage";
 import { RoleGuard } from "./RoleGuard";
 import { ROLE_HOME_PATH } from "./roleHome";
 
@@ -40,6 +44,10 @@ export const router = createBrowserRouter([
   { path: "/teacher/quizzes/:quizId/results", element: roleRoute("TEACHER", <QuizResultsPage scope="teacher" />) },
 
   { path: ROLE_HOME_PATH.ADMIN, element: roleRoute("ADMIN", <AdminHomePage />) },
+  { path: "/admin/classes", element: roleRoute("ADMIN", <ClassesPage />) },
+  { path: "/admin/classes/:classId", element: roleRoute("ADMIN", <ClassDetailPage />) },
+  { path: "/admin/users", element: roleRoute("ADMIN", <UsersPage />) },
+  { path: "/admin/users/import", element: roleRoute("ADMIN", <ImportUsersPage />) },
   { path: "/admin/quizzes", element: roleRoute("ADMIN", <AdminQuizzesPage />) },
   { path: "/admin/results", element: roleRoute("ADMIN", <AdminResultsPage />) },
   { path: "/admin/quizzes/:quizId/results", element: roleRoute("ADMIN", <QuizResultsPage scope="admin" />) },

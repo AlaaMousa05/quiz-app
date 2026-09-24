@@ -9,13 +9,7 @@ export class ApiError extends Error {
   }
 }
 
-async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`/api${path}`, {
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    ...init,
-  });
-
+async function toResult<T>(res: Response): Promise<T> {
   if (res.status === 204) {
     return undefined as T;
   }
@@ -29,6 +23,21 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   }
 
   return body as T;
+}
+
+function request<T>(path: string, init?: RequestInit): Promise<T> {
+  return fetch(`/api${path}`, {
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    ...init,
+  }).then(toResult<T>);
+}
+
+// Multipart requests bypass the JSON-only wrapper above — fetch must set its
+// own multipart boundary in Content-Type, which it only does when no
+// Content-Type header is set explicitly.
+export function postForm<T>(path: string, form: FormData): Promise<T> {
+  return fetch(`/api${path}`, { method: "POST", credentials: "include", body: form }).then(toResult<T>);
 }
 
 export const apiClient = {

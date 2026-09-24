@@ -180,22 +180,22 @@ description: "Task list for Quiz App Core (Clickable MVP)"
 
 ### Tests first
 
-- [ ] T078 [P] Write `server/tests/integration/admin-classes.routes.test.ts` referencing `admin.spec: create/rename/archive a class`, `admin.spec: class with students or quizzes cannot be deleted`, `admin.spec: move student preserves past attempts and updates future quiz visibility`, plus class restore (FR-028/029) and auto-created class on import (FR-020a)
-- [ ] T079 [P] Write `server/tests/integration/admin-users.routes.test.ts` referencing `admin.spec: deactivated user cannot log in but history is retained`, plus student/teacher import (`import.spec: valid rows create accounts/quiz content`, `import.spec: preview shows per-row errors before saving`), duplicate skip (FR-020), and student-ID generation `S<class><NN>` (FR-016)
-- [ ] T080 [P] Write `server/tests/unit/arabicSearch.service.test.ts` referencing `search.spec: Arabic name search ignores diacritics and normalizes alef variants` (FR-038)
+- [X] T078 [P] Write `server/tests/integration/admin-classes.routes.test.ts` referencing `admin.spec: create/rename/archive a class`, `admin.spec: class with students or quizzes cannot be deleted`, `admin.spec: move student preserves past attempts and updates future quiz visibility`, plus class restore (FR-028/029) and auto-created class on import (FR-020a)
+- [X] T079 [P] Write `server/tests/integration/admin-users.routes.test.ts` referencing `admin.spec: deactivated user cannot log in but history is retained`, plus student/teacher import (`import.spec: valid rows create accounts/quiz content`, `import.spec: preview shows per-row errors before saving`), duplicate skip (FR-020), and student-ID generation `S<class><NN>` (FR-016)
+- [X] T080 [P] Write `server/tests/unit/arabicSearch.service.test.ts` referencing `search.spec: Arabic name search ignores diacritics and normalizes alef variants` (FR-038)
 
 ### Implementation
 
-- [ ] T081 [P] Implement `shared/src/arabicName.ts` `normalizeArabicName()` (diacritic strip, alef unify, teh-marbuta map) per research.md, until T080 green
-- [ ] T082 [P] Create `shared/src/schemas/class.schema.ts` + `user.schema.ts` (userCreateSchema, classId required iff STUDENT)
-- [ ] T083 Implement `server/src/services/class.service.ts` (create/rename/archive/restore, delete-only-if-empty), `user.service.ts` (single create, generated username+password, reset, deactivate/reactivate), `arabicSearch.service.ts`, and extend `import.service.ts` for students/teachers (student-ID from file or generated, auto-create missing class)
-- [ ] T084 Implement `class.repository.ts` and extend `user.repository.ts`; write `nameNormalized` on every user write
-- [ ] T085 Implement `server/src/controllers/admin-classes.controller.ts` + `admin-users.controller.ts` and their routes (contracts/admin-classes.md, admin-users.md, imports.md student/teacher flows), all `requireRole('ADMIN')`
-- [ ] T086 [P] Implement `client/src/features/admin-classes/` and `admin-users/` (api/, hooks/, components/, pages/)
-- [ ] T087 Build A1 Dashboard, A2 Classes, A3 Class Detail (move student, archive/restore), A4 Users (create/reset/deactivate + printable credentials table = the post-import table, FR-031b), A5 Import Users (preview + per-row errors)
-- [ ] T088 Run admin + import + arabic-search tests; confirm green
-- [ ] T089 Quality gate for Phase 8 (includes `/code-review` medium on imports + credential creation, step 3)
-- [ ] T090 Commit Phase 8: `feat: admin classes, users, and student/teacher import`
+- [X] T081 [P] Implement `shared/src/arabicName.ts` `normalizeArabicName()` (diacritic strip, alef unify, teh-marbuta map) per research.md, until T080 green
+- [X] T082 [P] Create `shared/src/schemas/class.schema.ts` + `user.schema.ts` (userCreateSchema, classId required iff STUDENT)
+- [X] T083 Implement `server/src/services/class.service.ts` (create/rename/archive/restore, delete-only-if-empty), `user.service.ts` (single create, generated username+password, reset, deactivate/reactivate), `arabicSearch.service.ts`, and extend `import.service.ts` for students/teachers (student-ID from file or generated, auto-create missing class)
+- [X] T084 Implement `class.repository.ts` and extend `user.repository.ts`; write `nameNormalized` on every user write
+- [X] T085 Implement `server/src/controllers/admin-classes.controller.ts` + `admin-users.controller.ts` and their routes (contracts/admin-classes.md, admin-users.md, imports.md student/teacher flows), all `requireRole('ADMIN')`
+- [X] T086 [P] Implement `client/src/features/admin-classes/` and `admin-users/` (api/, hooks/, components/, pages/)
+- [X] T087 Build A1 Dashboard, A2 Classes, A3 Class Detail (move student, archive/restore), A4 Users (create/reset/deactivate + printable credentials table = the post-import table, FR-031b), A5 Import Users (preview + per-row errors)
+- [X] T088 Run admin + import + arabic-search tests; confirm green
+- [X] T089 Quality gate for Phase 8 — lint + tests + structure check only, per this session's explicit override; `/code-review` deferred to the single Phase 10 pass on the whole codebase (see notes/ai-log.md)
+- [X] T090 Commit Phase 8: `feat: admin classes, users, and student/teacher import`
 
 ---
 

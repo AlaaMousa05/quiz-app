@@ -14,3 +14,7 @@ export { questionSchema, questionOptionSchema } from "./schemas/question.schema.
 export type { QuestionInput } from "./schemas/question.schema.js";
 export { quizImportConfirmFieldsSchema } from "./schemas/import.schema.js";
 export type { QuizImportConfirmFields, QuizImportOption, QuizImportRow, QuizImportPreview } from "./schemas/import.schema.js";
+export { classCreateSchema, classUpdateSchema, moveStudentSchema } from "./schemas/class.schema.js";
+export type { ClassCreateInput, ClassUpdateInput, MoveStudentInput } from "./schemas/class.schema.js";
+export { userCreateSchema } from "./schemas/user.schema.js";
+export type { UserCreateInput } from "./schemas/user.schema.js";

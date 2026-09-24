@@ -1,20 +1,6 @@
 import type { QuizImportPreview } from "shared";
-import { ApiError } from "../../../lib/apiClient";
+import { postForm } from "../../../lib/apiClient";
 import type { QuizSettingsFormInput } from "./types";
-
-// Multipart requests bypass apiClient's JSON-only wrapper — fetch must set
-// its own multipart boundary in Content-Type, which it only does when no
-// Content-Type header is set explicitly.
-async function postForm<T>(path: string, form: FormData): Promise<T> {
-  const res = await fetch(`/api${path}`, { method: "POST", credentials: "include", body: form });
-  const body: unknown = await res.json().catch(() => undefined);
-  if (!res.ok) {
-    const messageKey = (body as { messageKey?: string } | undefined)?.messageKey;
-    const message = (body as { message?: string } | undefined)?.message ?? res.statusText;
-    throw new ApiError(message, res.status, messageKey);
-  }
-  return body as T;
-}
 
 export function previewQuizImportFile(file: File): Promise<QuizImportPreview> {
   const form = new FormData();

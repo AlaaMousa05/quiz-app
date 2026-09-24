@@ -101,3 +101,14 @@ Building this phase surfaced and fixed a real pre-existing bug: `student-quizzes
 - `GET /api/admin/quizzes`, `GET /api/admin/quizzes/:quizId/results` and `.../export.csv` — identical shapes, unfiltered by owner (ADMIN role only) — the exact same `quizResults.service.ts` as the teacher routes, per FR-031c's "same screens, different guard."
 
 Client: `/teacher/quizzes/:quizId/results` (T5), `/admin/quizzes` (A6), `/admin/results` (A7, grouped by class) — all three render the same `QuizResultsPage` component.
+
+## Admin classes, users, and import (Phase 8)
+
+Server, mounted under `/api/admin` (all routes `requireRole('ADMIN')`) and `/api/imports` (student/teacher variants also ADMIN-only):
+
+- `GET/POST /api/admin/classes`, `PATCH /api/admin/classes/:id` (rename and/or archive/restore via `status`), `DELETE /api/admin/classes/:id` (409 unless the class has zero students and zero quizzes — archive instead).
+- `GET /api/admin/classes/:id/students`, `POST /api/admin/classes/:id/students/:studentId/move` — moving a student only changes their `classId`; past attempts are untouched (FR-030).
+- `GET/POST /api/admin/users` (single create — student requires `classId`, teacher doesn't), `POST /api/admin/users/:id/reset-password`, `.../deactivate` (also destroys that user's active sessions so a deactivation takes effect immediately, not just on next login), `.../reactivate`.
+- `POST /api/imports/students/preview|confirm` and `/api/imports/teachers/preview|confirm` — same preview-then-confirm shape as quiz import; students take `Name, Class, StudentId?` (missing class auto-creates it, FR-020a; a provided `StudentId` is used verbatim if unique, else a `S<class><NN>` id is generated); teachers take `Name` only; a duplicate name (Arabic-normalized: diacritics stripped, alef unified, teh-marbuta mapped) within the same class (students) or overall (teachers) is skipped, not an error.
+
+Client: `/admin` (A1, now links to Classes/Users too), `/admin/classes` (A2), `/admin/classes/:classId` (A3 — rename/archive/restore/move-student/delete), `/admin/users` (A4 — create/reset-password/deactivate/reactivate), `/admin/users/import` (A5 — preview, per-row errors, then a printable credentials table for the created accounts, same pattern as A4's post-reset banner).

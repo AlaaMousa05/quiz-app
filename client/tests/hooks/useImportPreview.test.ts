@@ -1,6 +1,6 @@
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { useImportPreview } from "../../src/features/quiz-editor/hooks/useImportPreview";
+import { useImportPreview } from "../../src/lib/useImportPreview";
 
 const fakePreview = { rows: [{ rowNumber: 1, questionText: "Q1", points: 10, options: [], status: "OK" as const }], summary: { total: 1, willImport: 1 } };
 

@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "../../../lib/i18n/useTranslation";
 import { CenteredMessage } from "../../../components/ui/CenteredMessage";
 import { useTeacherClasses } from "../api/useTeacherClasses";
-import { useImportPreview } from "../hooks/useImportPreview";
+import { useImportPreview } from "../../../lib/useImportPreview";
 import { previewQuizImportFile, confirmQuizImportFile } from "../api/importApi";
 import { teacherQuizzesKey } from "../api/queryKeys";
 import { ImportPreviewTable } from "../components/ImportPreviewTable";
